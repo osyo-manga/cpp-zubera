@@ -21,7 +21,6 @@ const auto plus = [](auto a, auto b){
 	return a + b;
 };
 
-
 namespace dynarray{
 
 template<typename T>
@@ -84,6 +83,19 @@ operator ==(zubera::vector<T> const& v, X<U> const& u)
 }
 
 
+const auto each_with_index = [](auto make){
+	using vec_t = std::vector<int>;
+	vec_t result_indices;
+	vec_t result_values;
+	make(5, 4, 3, 2, 1).each_with_index([&](auto it, auto i){
+		result_indices.push_back(i);
+		result_values.push_back(it);
+	});
+
+	assert((result_indices == vec_t{0, 1, 2, 3, 4}));
+	assert((result_values  == vec_t{5, 4, 3, 2, 1}));
+};
+
 const auto inject = [](auto make){
 	assert(make(1, 2, 3).inject(0, plus) == 6);
 };
@@ -120,6 +132,7 @@ test(Makers... makers){
 	auto call  = [&](auto f){ (void)std::initializer_list<int>{ (f(makers), 0)...}; };
 
 	call(inject);
+	call(each_with_index);
 	call(count);
 	call(select);
 	call(map);
@@ -139,9 +152,9 @@ main(){
 
 	auto xs = dynarray::v(1, 2, 3);
 
-	std::cout << xs << std::endl;
-	std::cout << xs.inject(0, [](auto sum, auto n){ return sum + n; }) << std::endl;
-	std::cout << xs.map([](auto it){ return "homu:" + std::to_string(it); }) << std::endl;
+// 	std::cout << xs << std::endl;
+// 	std::cout << xs.inject(0, [](auto sum, auto n){ return sum + n; }) << std::endl;
+// 	std::cout << xs.map([](auto it){ return "homu:" + std::to_string(it); }) << std::endl;
 
 
 	dynarray::inject(make_tuple);
@@ -155,6 +168,10 @@ main(){
 
 	t.each([](auto x){
 		std::cout << x << std::endl;
+	});
+
+	t.each_with_index([](auto x, auto i){
+		std::cout << i << ":" << x << std::endl;
 	});
 
 	return 0;

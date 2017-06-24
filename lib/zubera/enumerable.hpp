@@ -25,6 +25,17 @@ struct enumerable{
 		return count() == 0;
 	}
 
+	template<typename F>
+	constexpr auto
+	each_with_index(F f) const{
+		return self().inject(0, [&](auto i, auto it) constexpr {
+			f(it, i);
+			return ++i;
+		});
+	}
+
+
+
 	template<typename Init, typename F>
 	constexpr auto
 	inject(Init init, F f) const{
