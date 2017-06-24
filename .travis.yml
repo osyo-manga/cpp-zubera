@@ -22,10 +22,9 @@ before_install:
 
 install:
   - sudo apt-get -qq install build-essential
-  - sudo apt-get install binutils
 #   - sudo apt-get -qq --allow-unauthenticated install libstdc++-${LIBSTDC_VERSION}-dev
 #   - sudo apt-get -qq --allow-unauthenticated install clang-3.5
-  - sudo apt-get install gcc-7 g++-7
+  - sudo apt-get install g++-7
 
 script:
   - g++-${GCC_VERSION} -std=gnu++1z -Wall -Wextra -pedantic test/zubera.cpp && ./a.out
