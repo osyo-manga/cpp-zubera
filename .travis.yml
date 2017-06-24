@@ -1,3 +1,8 @@
+language:
+  - cpp
+# compiler:
+#  - gcc
+#  - clang
 env:
   global:
     - GCC_VERSION=7
