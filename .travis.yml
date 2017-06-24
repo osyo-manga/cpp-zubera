@@ -32,5 +32,5 @@ install:
 
 script:
   - g++-${GCC_VERSION} -std=gnu++1z -Wall -Wextra -pedantic test/zubera.cpp && ./a.out
-  - clang++-5.0 -std=gnu++1z -Wall -Wextra -pedantic test/zubera.cpp.cpp && ./a.out
+  - clang++-5.0 -std=gnu++1z -Wall -Wextra -pedantic test/zubera.cpp && ./a.out
 
