@@ -36,7 +36,7 @@ struct enumerable{
 
 	template<typename T, typename F>
 	constexpr bool
-	equal_to(T rhs, F f) const{
+	equal_to(T&& rhs, F f) const{
 		if( self().count() != rhs.count() ){
 			return false;
 		}
@@ -53,8 +53,20 @@ struct enumerable{
 
 	template<typename T>
 	constexpr bool
-	equal(T rhs) const{
-		return self().equal_to(rhs, [](auto a, auto b) constexpr { return a == b; });
+	equal(T&& rhs) const{
+		return self().equal_to(std::forward<T>(rhs), [](auto a, auto b) constexpr { return a == b; });
+	}
+
+	template<typename T>
+	constexpr bool
+	operator ==(T&& t) const{
+		return self().equal(std::forward<T>(t));
+	}
+
+	template<typename T>
+	constexpr bool
+	operator !=(T&& t) const{
+		return !self().equal(std::forward<T>(t));
 	}
 
 	template<typename Init, typename F>
@@ -69,7 +81,7 @@ struct enumerable{
 
 	template<typename Pred>
 	constexpr std::size_t
-	count_if(Pred pred) const{
+	count_if(Pred&& pred) const{
 		return self().inject(0, [&pred](auto sum, auto it) constexpr {
 			return pred(it) ? sum + 1 : sum;
 		});
@@ -77,7 +89,7 @@ struct enumerable{
 
 	constexpr auto
 	count() const{
-		return self().count_if([](...) constexpr { return true; });
+		return self().count_if([](auto...) constexpr { return true; });
 	}
 
 	template<typename T>

@@ -68,19 +68,19 @@ v(T t, Args... args){
 	return { t, args... };
 }
 
-template<typename T, typename U>
-auto
-operator ==(X<T> const& v, U&& u)
-->decltype(v.get() == u){
-	return v.get() == u;
-}
+// template<typename T, typename U>
+// auto
+// operator ==(X<T> const& v, U&& u)
+// ->decltype(v.get() == u){
+// 	return v.get() == u;
+// }
 
-template<typename T, typename U>
-auto
-operator ==(zubera::vector<T> const& v, X<U> const& u)
-->decltype(v == u.get()){
-	return v == u.get();
-}
+// template<typename T, typename U>
+// auto
+// operator ==(zubera::vector<T> const& v, X<U> const& u)
+// ->decltype(v == u.get()){
+// 	return v == u.get();
+// }
 
 
 const auto each_with_index = [](auto make){
@@ -102,6 +102,11 @@ const auto equal_to = [](auto make){
 	assert(a.equal(v(1, 2, 3)));
 	assert((!a.equal(make(1, 2))));
 	assert((!a.equal(v(1, 2))));
+
+	assert(a == a);
+	assert(a == v(1, 2, 3));
+	assert(a != v(1, 2));
+	assert(a != v(1, 2, 4));
 
 	assert(a.equal_to(make("1", "2", "3"), [](auto a, auto b){
 		return std::to_string(a) == b;
