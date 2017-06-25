@@ -2,9 +2,7 @@ language:
   - cpp
 sudo: required
 dist: trusty
-# compiler:
-#  - gcc
-#  - clang
+cache: apt
 env:
   global:
     - GCC_VERSION=7
