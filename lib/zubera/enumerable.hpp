@@ -34,7 +34,28 @@ struct enumerable{
 		});
 	}
 
+	template<typename T, typename F>
+	constexpr bool
+	equal_to(T rhs, F f) const{
+		if( self().count() != rhs.count() ){
+			return false;
+		}
+		auto result = true;
+		self().each_with_index([&](auto lhs, auto i){
+			rhs.each_with_index([&](auto rhs, auto j){
+				if( result && i == j ){
+					result = f(lhs, rhs);
+				}
+			});
+		});
+		return result;
+	}
 
+	template<typename T>
+	constexpr bool
+	equal(T rhs) const{
+		return self().equal_to(rhs, [](auto a, auto b) constexpr { return a == b; });
+	}
 
 	template<typename Init, typename F>
 	constexpr auto

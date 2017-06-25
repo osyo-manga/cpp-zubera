@@ -96,6 +96,18 @@ const auto each_with_index = [](auto make){
 	assert((result_values  == vec_t{5, 4, 3, 2, 1}));
 };
 
+const auto equal_to = [](auto make){
+	auto a = make(1, 2, 3);
+	assert(a.equal(a));
+	assert(a.equal(v(1, 2, 3)));
+	assert((!a.equal(make(1, 2))));
+	assert((!a.equal(v(1, 2))));
+
+	assert(a.equal_to(make("1", "2", "3"), [](auto a, auto b){
+		return std::to_string(a) == b;
+	}));
+};
+
 const auto inject = [](auto make){
 	assert(make(1, 2, 3).inject(0, plus) == 6);
 };
@@ -133,6 +145,7 @@ test(Makers... makers){
 
 	call(inject);
 	call(each_with_index);
+	call(equal_to);
 	call(count);
 	call(select);
 	call(map);
