@@ -6,20 +6,23 @@
 #include <array>
 
 
-const auto is_even = [](auto it){ return it % 2 == 0; };
-const auto is_odd  = [](auto it){ return it % 2 != 0; };
+constexpr auto is_even = [](auto it) constexpr { return it % 2 == 0; };
+constexpr auto is_odd  = [](auto it) constexpr { return it % 2 != 0; };
 
-const auto is_over = [](auto x){
-	return [x](auto n){ return n >= x; };
+constexpr auto is_over = [](auto x) constexpr {
+	return [x](auto n) constexpr { return n >= x; };
 };
 
-const auto is_equal = [](auto x){
-	return [x](auto n){ return n == x; };
+constexpr auto is_equal = [](auto x) constexpr {
+	return [x](auto n) constexpr { return n == x; };
 };
 
-const auto plus = [](auto a, auto b){
+constexpr auto plus = [](auto a, auto b) constexpr {
 	return a + b;
 };
+
+constexpr auto twice = [](auto it) constexpr { return it + it; };
+
 
 namespace dynarray{
 
@@ -134,7 +137,6 @@ const auto select = [](auto make){
 
 const auto map = [](auto make){
 	using namespace std::literals::string_literals;
-	auto twice = [](auto it){ return it + it; };
 	auto to_string = [](auto it){ return std::to_string(it); };
 
 	assert(make(1, 2, 3).map(twice) == make(2, 4, 6));
@@ -159,6 +161,23 @@ test(Makers... makers){
 }  // namespace dynarray{
 
 
+namespace static_{
+
+void
+test(){
+	constexpr auto t = [](auto... xs) constexpr { return zubera::make_tuple(xs...); };
+
+	static_assert(t(1, 3.14f, 'c') == t(1, 3.14f, 'c'), "");
+	static_assert(t(1, 3.14f, 'c') != t(1, 3.14f, 'd'), "");
+	static_assert(t(1, 2, 3).inject(0, plus) == 6, "");
+	static_assert(t(1, 2.5f, 3.5, 2.5f).inject(0.0, plus) == 9.5, "");
+
+#ifndef __clang__
+	static_assert(t(1, 2.5f, 3.5).map([](auto it) constexpr { return std::visit(twice, it); }) == t(2, 5.0f, 7.0), "");
+#endif
+}
+
+}  // namespace static_
 
 int
 main(){
@@ -166,21 +185,10 @@ main(){
 	auto make_vector = [](auto x, auto... xs){ return zubera::vector<decltype(x)>{ x, xs... }; };
 	auto make_tuple = [](auto... xs){ return zubera::make_tuple(xs...); };
 
-	dynarray::test(make_x, make_vector);
+	dynarray::test(make_x, make_vector, make_tuple);
 
-	auto xs = dynarray::v(1, 2, 3);
+	static_::test();
 
-// 	std::cout << xs << std::endl;
-// 	std::cout << xs.inject(0, [](auto sum, auto n){ return sum + n; }) << std::endl;
-// 	std::cout << xs.map([](auto it){ return "homu:" + std::to_string(it); }) << std::endl;
-
-
-	dynarray::inject(make_tuple);
-	dynarray::count(make_tuple);
-
-// 	static_assert([](auto sum, auto n) constexpr { return sum + n; }(1, 2) == 3, "");
-	constexpr auto result = zubera::make_tuple(1, 2, 3).inject(0, [](auto sum, auto n) constexpr { return sum + n; });
-	static_assert(result == 6, "");
 
 	constexpr auto t = zubera::make_tuple(42, 3.14f, "homu");
 
