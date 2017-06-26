@@ -13,7 +13,7 @@ namespace tuple_detail{
 template<typename Tuple, typename F, std::size_t... Indices>
 constexpr void
 apply(Tuple&& t, F f, std::index_sequence<Indices...>){
-	[](...){}((f(std::get<Indices>(t)), 0)...);
+	[](auto...){}((f(std::get<Indices>(t)), 0)...);
 }
 
 template<typename T, typename U, typename... Args>
