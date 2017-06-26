@@ -71,9 +71,9 @@ struct enumerable{
 
 	template<typename Init, typename F>
 	constexpr auto
-	inject(Init init, F f) const{
+	inject(Init&& init, F f) const{
 		self().each([&](auto n) constexpr {
-			init = f(init, n);
+			init = f(std::forward<Init>(init), n);
 		});
 		return init;
 	}
