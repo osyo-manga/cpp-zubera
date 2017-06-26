@@ -114,9 +114,6 @@ struct enumerable{
 			return result.push(f(it));
 		});
 	}
-
-// 	template<typename Seq>
-// 	bool
 };
 
 template<

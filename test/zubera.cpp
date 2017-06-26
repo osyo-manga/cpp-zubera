@@ -22,6 +22,7 @@ constexpr auto plus = [](auto a, auto b) constexpr {
 };
 
 constexpr auto twice = [](auto it) constexpr { return it + it; };
+constexpr auto to_s  = [](auto it) constexpr { return std::to_string(it); };
 
 
 namespace dynarray{
@@ -165,16 +166,16 @@ namespace static_{
 
 void
 test(){
-	constexpr auto t = [](auto... xs) constexpr { return zubera::make_tuple(xs...); };
+	constexpr auto t = [](auto... xs) constexpr { return zubera::tuple(xs...); };
 
 	static_assert(t(1, 3.14f, 'c') == t(1, 3.14f, 'c'), "");
 	static_assert(t(1, 3.14f, 'c') != t(1, 3.14f, 'd'), "");
 	static_assert(t(1, 2, 3).inject(0, plus) == 6, "");
 	static_assert(t(1, 2.5f, 3.5, 2.5f).inject(0.0, plus) == 9.5, "");
+	static_assert(t(1, 2.5f, 3.5).map(twice) == t(2, 5.0f, 7.0), "");
 
-#ifndef __clang__
-	static_assert(t(1, 2.5f, 3.5).map([](auto it) constexpr { return std::visit(twice, it); }) == t(2, 5.0f, 7.0), "");
-#endif
+	using namespace std::literals::string_literals;
+	assert((t(1, 2.5f, 3.5).map(to_s) == t("1"s, "2.500000"s, "3.500000"s)));
 }
 
 }  // namespace static_
@@ -183,22 +184,23 @@ int
 main(){
 	auto make_x = [](auto x, auto... xs){ return dynarray::X<decltype(x)>{ x, xs... }; };
 	auto make_vector = [](auto x, auto... xs){ return zubera::vector<decltype(x)>{ x, xs... }; };
-	auto make_tuple = [](auto... xs){ return zubera::make_tuple(xs...); };
+	auto make_tuple = [](auto... xs){ return zubera::tuple{xs...}; };
 
 	dynarray::test(make_x, make_vector, make_tuple);
 
 	static_::test();
 
 
-	constexpr auto t = zubera::make_tuple(42, 3.14f, "homu");
+	constexpr auto t = zubera::tuple(42, 3.14f, "homu");
+	
 
 	t.each([](auto x){
 		std::cout << x << std::endl;
 	});
 
-	t.each_with_index([](auto x, auto i){
-		std::cout << i << ":" << x << std::endl;
-	});
+// 	t.each_with_index([](auto x, auto i){
+// 		std::cout << i << ":" << x << std::endl;
+// 	});
 
 	return 0;
 }
