@@ -8,6 +8,11 @@ void
 test_enumerable_functions(Maker make){
 	using namespace test;
 
+	SECTION("all_of"){
+		REQUIRE(make(1, 2, 3).all_of(is_under(3)));
+		REQUIRE(!make(1, 2, 3, 4).all_of(is_under(3)));
+	}
+
 	SECTION("count"){
 		REQUIRE(test::X<int>{}.count() == 0);
 

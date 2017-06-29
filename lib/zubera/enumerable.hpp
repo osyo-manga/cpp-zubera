@@ -22,7 +22,7 @@ struct enumerable{
 
 	template<typename Pred>
 	constexpr bool
-	is_all(Pred&& pred) const{
+	all_of(Pred&& pred) const{
 		return self().inject(true, [&](auto result, auto it) constexpr {
 			return result && pred(it);
 		});

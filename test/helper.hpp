@@ -5,7 +5,6 @@
 #include "../lib/zubera.hpp"
 
 
-
 namespace test{
 
 
@@ -14,6 +13,10 @@ constexpr auto is_odd  = [](auto it) constexpr { return it % 2 != 0; };
 
 constexpr auto is_over = [](auto x) constexpr {
 	return [x](auto n) constexpr { return n >= x; };
+};
+
+constexpr auto is_under = [](auto x) constexpr {
+	return [x](auto n) constexpr { return n <= x; };
 };
 
 constexpr auto is_equal = [](auto x) constexpr {
@@ -74,6 +77,10 @@ v(T t, Args... args){
 }
 
 
+template<typename... Ts>
+struct overloaded : Ts... { using Ts::operator()...; };
+template<typename... Ts>
+overloaded(Ts...) -> overloaded<Ts...>;
 
 }  // namespace test
 
