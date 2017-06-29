@@ -23,6 +23,6 @@ install:
   - sudo apt-get install gcc-7 g++-7
 
 script:
-  - g++-7 -std=gnu++1z -Wall -Wextra -pedantic test/enumerable.cpp && ./a.out
-  - clang++-5.0 -std=gnu++1z -Wall -Wextra -pedantic test/enumerable.cpp && ./a.out
+  - g++-7 -std=gnu++1z -Wall -Wextra -pedantic test/all.cpp && ./a.out
+  - clang++-5.0 -std=gnu++1z -Wall -Wextra -pedantic test/all.cpp && ./a.out
 
