@@ -1,5 +1,4 @@
 /lib/**
 !/lib/**.hpp
 /test/**
-!/test/*.cpp
-!/test/*.hpp
+!/test/*.*
