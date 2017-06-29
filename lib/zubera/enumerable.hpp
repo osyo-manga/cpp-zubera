@@ -20,6 +20,15 @@ struct enumerable{
 		return *static_cast<self_t const*>(this);
 	}
 
+	template<typename Pred>
+	constexpr bool
+	is_all(Pred&& pred) const{
+		return self().inject(true, [&](auto result, auto it) constexpr {
+			return result && pred(it);
+		});
+	}
+	
+
 
 	template<typename Pred>
 	constexpr std::size_t

@@ -81,6 +81,10 @@ v(T t, Args... args){
 }
 
 
+const auto is_all = [](auto make){
+	
+};
+
 const auto each_with_index = [](auto make){
 	using vec_t = std::vector<int>;
 	vec_t result_indices;
