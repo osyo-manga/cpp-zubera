@@ -101,8 +101,7 @@ struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, tuple_detail::var
 };
 
 template<typename... Args>
-tuple(Args&&... args) -> tuple<std::decay_t<Args>...>;
-// tuple(Args&&... args) -> tuple<tuple_detail::special_decay_t<Args>...>;
+tuple(Args&&... args) -> tuple<tuple_detail::special_decay_t<Args>...>;
 
 
 }  // namespace zubera
