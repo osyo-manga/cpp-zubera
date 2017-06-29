@@ -44,17 +44,43 @@ template<typename... Args>
 constexpr std::variant<Args...>
 tuple_to_variant(std::tuple<Args...>);
 
+
+template<typename... Args>
+struct variant;
+
 template<typename T, typename... Args>
-struct variant{
+struct variant<T, Args...>{
 	using params = decltype(unique<T, Args...>());
 	using type = std::conditional_t<std::tuple_size<params>{} == 1, T, decltype(tuple_to_variant(params{}))>;
 };
+
+template<>
+struct variant<>{
+	using type = std::variant<>;
+};
+
+template<typename... Args>
+using variant_t = typename variant<Args...>::type;
+
+template<typename T>
+struct unwrap_refwrapper{
+	using type = T;
+};
+
+template<typename T>
+struct unwrap_refwrapper<std::reference_wrapper<T>>{
+	using type = T&;
+};
+
+template<typename T>
+using special_decay_t = typename unwrap_refwrapper<typename std::decay<T>::type>::type;
+
 
 }  // namespace tuple_detail
 
 
 template<typename... Args>
-struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, typename tuple_detail::variant<Args...>::type>{
+struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, tuple_detail::variant_t<Args...>>{
 	using std::tuple<Args...>::tuple;
 
 	template<typename F>
@@ -69,13 +95,14 @@ struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, typename tuple_de
 	constexpr auto
 	map(F f) const{
 		return std::apply([&](auto... args){
-			return tuple<decltype(f(args))...>{ f(args)... };
-		}, std::tuple<Args...>(*this));
+			return zubera::tuple{ f(args)... };
+		}, (std::tuple<Args...>)(*this));
 	}
 };
 
 template<typename... Args>
 tuple(Args&&... args) -> tuple<std::decay_t<Args>...>;
+// tuple(Args&&... args) -> tuple<tuple_detail::special_decay_t<Args>...>;
 
 
 }  // namespace zubera

@@ -9,12 +9,13 @@ test_enumerable_functions(Maker make){
 	using namespace test;
 
 	SECTION("all_of"){
+		REQUIRE(make().all_of(is_under(3)));
 		REQUIRE(make(1, 2, 3).all_of(is_under(3)));
 		REQUIRE(!make(1, 2, 3, 4).all_of(is_under(3)));
 	}
 
 	SECTION("count"){
-		REQUIRE(test::X<int>{}.count() == 0);
+		REQUIRE(make().count() == 0);
 
 		REQUIRE(make(1, 2, 3).count() == 3);
 		REQUIRE(make(1, 2, 3, 4, 5).count_if(is_over(3)) == 3);
@@ -66,8 +67,14 @@ test_enumerable_functions(Maker make){
 
 
 TEST_CASE("zubera::enumerable", "[zubera][enumerable]"){
-	auto make_x = [](auto x, auto... xs){ return test::X<decltype(x)>{ x, xs... }; };
-	auto make_vector = [](auto x, auto... xs){ return zubera::vector<decltype(x)>{ x, xs... }; };
+	auto make_x = test::overloaded{
+		[](auto x, auto... xs){ return test::X<decltype(x)>{ x, xs... }; },
+		[](){ return test::X<int>{}; }
+	};
+	auto make_vector = test::overloaded{
+		[](auto x, auto... xs){ return zubera::vector<decltype(x)>{ x, xs... }; },
+		[](){ return zubera::vector<int>{}; }
+	};
 	auto make_tuple = [](auto... xs){ return zubera::tuple{xs...}; };
 
 	test_enumerable_functions(make_x);
