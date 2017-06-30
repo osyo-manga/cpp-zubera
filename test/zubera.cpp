@@ -28,26 +28,13 @@ test(){
 int
 main(){
 	static_::test();
-		using namespace std::literals::string_literals;
+	using namespace test;
+	using namespace std::literals::string_literals;
 
 	auto make = [](auto... xs){ return zubera::tuple{xs...}; };
 
-	auto to_string = [](auto it){ return std::to_string(it); };
-	make(1, 2, 3).map(to_string) == make("1"s, "2"s, "3"s);
-
-	auto t = zubera::tuple{};
-
-	make(1, 2, 3, 4, 5, 6).select(test::is_odd)  == make(1, 3, 5);
-// 	constexpr auto t = zubera::tuple(42, 3.14f, "homu");
-//
-//
-// 	t.each([](auto x){
-// 		std::cout << x << std::endl;
-// 	});
-
-// 	t.each_with_index([](auto x, auto i){
-// 		std::cout << i << ":" << x << std::endl;
-// 	});
+	std::cout << make().all_of(is_under(3));
+	std::cout << zubera::vector<int>{}.all_of(is_under(3));
 
 	return 0;
 }

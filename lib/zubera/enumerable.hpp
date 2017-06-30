@@ -14,20 +14,19 @@ template<
 struct enumerable{
 	using self_t = Derived;
 	using Tarray_t = Result<Value>;
+	using value_t = Value;
 
 	constexpr self_t const&
 	self() const{
 		return *static_cast<self_t const*>(this);
 	}
 
+
 	template<typename Pred>
 	constexpr bool
 	all_of(Pred&& pred) const{
-		return self().inject(true, [&](auto result, auto it) constexpr {
-			return result && pred(it);
-		});
+		return count() == count_if(std::forward<Pred>(pred));
 	}
-	
 
 
 	template<typename Pred>
