@@ -30,6 +30,15 @@ constexpr auto plus = [](auto a, auto b) constexpr {
 constexpr auto twice = [](auto it) constexpr { return it + it; };
 constexpr auto to_s  = [](auto it) constexpr { return std::to_string(it); };
 
+constexpr struct p_{
+	template<typename T>
+	std::decay_t<T>
+	operator <<(T&& t) const{
+		std::cout << t;
+		return t;
+	}
+} p;
+
 
 template<typename T>
 struct X : zubera::enumerable<X<T>, T>{
