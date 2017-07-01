@@ -69,6 +69,16 @@ struct enumerable{
 		return self().count_if([&t](auto it){ return it == t; });
 	}
 
+	template<typename F>
+	constexpr auto
+	cycle(std::size_t size, F&& f) const{
+// 		Result<Result<Value>> result{};
+// 		auto a = self().to_a();
+		for(std::size_t i = 0 ; i < size ; ++i){
+			self().each(std::forward<F>(f));
+		}
+// 		return result;
+	}
 
 	template<typename F>
 	constexpr auto
@@ -164,9 +174,11 @@ template<
 >
 std::ostream&
 operator <<(std::ostream& os, enumerable<Derived, T, Result> const& e){
+	os << "[ ";
 	e.self().each([&os](auto n){
 		os << n << ", ";
 	});
+	os << " ]";
 	return os;
 }
 

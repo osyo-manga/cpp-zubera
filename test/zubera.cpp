@@ -37,14 +37,14 @@ main(){
 			[](){ return zubera::vector<int>{}; }
 		};
 		make().concat(make(3, 4)) == make(3, 4);
+		std::cout << make(1, 2, 3).cycle(3) << std::endl;
 	}
 
 	auto make = [](auto... xs){ return zubera::tuple{xs...}; };
 
-	std::cout << make().all_of(is_under(3));
-	std::cout << zubera::vector<int>{}.all_of(is_under(3));
+// 	std::cout << make().all_of(is_under(3));
+// 	std::cout << zubera::vector<int>{}.all_of(is_under(3));
 
-	make().select(is_under(0));
 // 	make().concat(make(3, 4)) == make(3, 4);
 	return 0;
 }

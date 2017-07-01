@@ -54,6 +54,14 @@ test_enumerable_functions(Maker make){
 		CHECK(make("homu", "homu", "mami").count("homu"s) == 2);
 	}
 
+	SECTION("cycle"){
+		std::vector<int> result;
+		make(1, 2, 3).cycle(3, [&result](auto it){
+			result.push_back(it);
+		});
+		CHECK((result == std::vector<int>{1, 2, 3, 1, 2, 3, 1, 2, 3}));
+	}
+
 	SECTION("each"){
 		using vec_t = std::vector<int>;
 		vec_t each_result;
