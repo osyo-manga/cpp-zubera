@@ -36,8 +36,9 @@ main(){
 			[](auto x, auto... xs){ return zubera::vector<decltype(x)>{ x, xs... }; },
 			[](){ return zubera::vector<int>{}; }
 		};
-		make().concat(make(3, 4)) == make(3, 4);
-		std::cout << make(1, 2, 3).cycle(3) << std::endl;
+		
+		auto result = make(1, 2, 3).find(equal_to(-1));
+		std::cout << *result << std::endl;
 	}
 
 	auto make = [](auto... xs){ return zubera::tuple{xs...}; };

@@ -2,6 +2,7 @@
 #define ZUBERA_ENUMERABLE_H
 
 #include <iostream>
+#include <optional>
 
 namespace zubera{
 
@@ -88,6 +89,19 @@ struct enumerable{
 			return ++i;
 		});
 	}
+
+	template<typename Pred>
+	constexpr auto
+	find(Pred&& pred){
+// 		std::optional<value_t> result{ std::nullopt };
+		using opt_t = std::optional<value_t>;
+		return self().inject(opt_t{ std::nullopt }, [&](auto result, auto it) constexpr {
+			return result   ? result
+				 : pred(it) ? std::make_optional(it)
+				 : std::nullopt;
+		});
+	}
+
 
 	template<typename Init, typename F>
 	constexpr auto

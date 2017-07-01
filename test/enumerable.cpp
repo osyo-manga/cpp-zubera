@@ -85,6 +85,15 @@ test_enumerable_functions(Maker make){
 		CHECK((result_values  == vec_t{5, 4, 3, 2, 1}));
 	}
 
+	SECTION("find"){
+		auto v = make(5, 3, 1, 4, 2);
+		CHECK( v.find(is_over(3)));
+		CHECK(*v.find(is_over(3)) == 5);
+		CHECK(*v.find(is_even) == 4);
+		CHECK(!v.find(is_over(6)));
+		CHECK(!make().find(is_over(6)));
+	}
+
 	SECTION("inject"){
 		CHECK((make(1, 2, 3).inject(0, plus) == 6));
 	}
@@ -99,15 +108,15 @@ test_enumerable_functions(Maker make){
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_odd)  == make(1, 3, 5));
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_under(0)) == make());
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_under(0)).is_empty());
-
-		// zubera::tuple is not supported.
-// 		CHECK(make().select(is_under(0)).is_empty());
+		CHECK(make().select(is_under(0)).is_empty());
 	}
 
 
 	SECTION("concat"){
 		CHECK(make(1, 2).concat(make(3, 4)) == make(1, 2, 3, 4));
 		CHECK(make(1, 2).concat(make()) == make(1, 2));
+
+		// zubera::tuple is not supported.
 // 		CHECK(make().concat(make(3, 4)) == make(3, 4));
 	}
 }
