@@ -8,6 +8,7 @@ void
 test_enumerable_functions(Maker make){
 	using namespace test;
 	using namespace std::literals::string_literals;
+	auto to_string = [](auto it){ return std::to_string(it); };
 
 	SECTION("all_of"){
 		CHECK(make().all_of(is_under(3)));
@@ -36,6 +37,11 @@ test_enumerable_functions(Maker make){
 		CHECK(make(1, false, 3).any_of());
 		CHECK(!make().any_of());
 		CHECK(!make(false, false, false).any_of());
+	}
+
+	SECTION("collect"){
+		CHECK(make(1, 2, 3).collect(twice) == make(2, 4, 6));
+		CHECK(make(1, 2, 3).collect(to_string) == make("1"s, "2"s, "3"s));
 	}
 
 	SECTION("count"){
@@ -76,8 +82,6 @@ test_enumerable_functions(Maker make){
 	}
 
 	SECTION("map"){
-		auto to_string = [](auto it){ return std::to_string(it); };
-
 		CHECK(make(1, 2, 3).map(twice) == make(2, 4, 6));
 		CHECK(make(1, 2, 3).map(to_string) == make("1"s, "2"s, "3"s));
 	}

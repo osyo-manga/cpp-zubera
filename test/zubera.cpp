@@ -31,6 +31,14 @@ main(){
 	using namespace test;
 	using namespace std::literals::string_literals;
 
+	{
+		auto make = test::overloaded{
+			[](auto x, auto... xs){ return zubera::vector<decltype(x)>{ x, xs... }; },
+			[](){ return zubera::vector<int>{}; }
+		};
+		make(1, 2, 3).collect(twice) == make(2, 4, 6);
+	}
+
 	auto make = [](auto... xs){ return zubera::tuple{xs...}; };
 
 	std::cout << make().all_of(is_under(3));

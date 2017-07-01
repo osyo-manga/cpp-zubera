@@ -44,6 +44,12 @@ struct enumerable{
 		return self().any_of([](auto it){ return it; });
 	}
 
+	template<typename F>
+	constexpr auto
+	collect(F&& f) const{
+		return self().map(std::forward<F>(f));
+	}
+
 	template<typename Pred>
 	constexpr std::size_t
 	count_if(Pred&& pred) const{
@@ -84,7 +90,7 @@ struct enumerable{
 
 	template<typename F>
 	auto
-	map(F f){
+	map(F&& f) const{
 		using result_t = Result<decltype(f(std::declval<Value>()))>;
 		return self().inject(result_t{}, [&f](auto result, auto it){
 			return result.push(f(it));
@@ -93,7 +99,7 @@ struct enumerable{
 
 	template<typename Pred>
 	auto
-	select(Pred pred){
+	select(Pred pred) const{
 		return self().inject(Tarray_t{}, [&pred](auto sum, auto it){
 			return pred(it) ? sum.push(it) : sum;
 		});
