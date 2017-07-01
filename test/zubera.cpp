@@ -36,7 +36,7 @@ main(){
 			[](auto x, auto... xs){ return zubera::vector<decltype(x)>{ x, xs... }; },
 			[](){ return zubera::vector<int>{}; }
 		};
-		make(1, 2, 3).collect(twice) == make(2, 4, 6);
+		make().concat(make(3, 4)) == make(3, 4);
 	}
 
 	auto make = [](auto... xs){ return zubera::tuple{xs...}; };
@@ -44,5 +44,7 @@ main(){
 	std::cout << make().all_of(is_under(3));
 	std::cout << zubera::vector<int>{}.all_of(is_under(3));
 
+	make().select(is_under(0));
+// 	make().concat(make(3, 4)) == make(3, 4);
 	return 0;
 }

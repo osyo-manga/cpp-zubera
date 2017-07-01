@@ -105,10 +105,22 @@ struct enumerable{
 		});
 	}
 
+	constexpr auto
+	to_a() const{
+		return self().select([](auto){ return true; });
+	}
 
 	constexpr bool
 	is_empty() const{
 		return count() == 0;
+	}
+
+	template<typename T>
+	constexpr auto
+	concat(T&& t) const{
+		return t.inject(self().to_a(), [](auto sum, auto it) constexpr {
+			return sum.push(it);
+		});
 	}
 
 	template<typename T, typename F>
