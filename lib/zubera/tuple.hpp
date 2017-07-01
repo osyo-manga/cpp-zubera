@@ -4,6 +4,7 @@
 #include <functional>
 #include <tuple>
 #include <variant>
+#include <any>
 #include <utility>
 #include "./enumerable.hpp"
 
@@ -56,7 +57,8 @@ struct variant<T, Args...>{
 
 template<>
 struct variant<>{
-	using type = std::variant<>;
+	using type = std::any;
+// 	using type = std::variant<>;
 };
 
 template<typename... Args>

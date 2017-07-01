@@ -1,6 +1,20 @@
 #define CATCH_CONFIG_MAIN
 #include "./helper.hpp"
 
+
+template<typename T>
+struct type_{
+	template<typename U>
+	constexpr bool
+	operator ==(U&&) const{
+		return std::is_same_v<T, std::decay_t<U>>;
+	}
+};
+
+template<typename T>
+constexpr type_<T> type{};
+
+
 TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
 	using namespace test;
 	using zubera::tuple;
@@ -26,5 +40,6 @@ TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
 	SECTION("select"){
 		auto t = tuple(1, 'c', 3.14).concat(tuple(1, 'c'));
 		assert(t.equal_to(tuple(1, 'c', 3.14, 1, 'c'), equal_to_variant));
+		assert(type<zubera::vector<std::any>> == zubera::tuple{}.select(is_over(3)));
 	}
 }
