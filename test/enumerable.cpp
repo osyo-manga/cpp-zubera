@@ -7,11 +7,35 @@ template<typename Maker>
 void
 test_enumerable_functions(Maker make){
 	using namespace test;
+	using namespace std::literals::string_literals;
 
 	SECTION("all_of"){
 		CHECK(make().all_of(is_under(3)));
 		CHECK(make(1, 2, 3).all_of(is_under(3)));
 		CHECK(!make(1, 2, 3, 4).all_of(is_under(3)));
+		CHECK(make(false, false, false).all_of([](auto...){ return true; }));
+
+		CHECK(make(1, 2, 3, 4).all_of());
+		CHECK(make(true).all_of());
+		CHECK(make().all_of());
+		CHECK(make("test").all_of());
+		CHECK(make("").all_of());
+		CHECK(!make(false, true).all_of());
+	}
+
+	SECTION("any_of"){
+		CHECK(make(1, 2, 3).any_of(equal_to(1)));
+		CHECK(make(1, 2, 3).any_of(equal_to(2)));
+		CHECK(make(1, 2, 3).any_of(equal_to(3)));
+		CHECK(make(1, 2, 3).any_of(is_over(0)));
+		CHECK(!make().any_of(equal_to(1)));
+		CHECK(!make().any_of([](auto...){ return false; }));
+		CHECK(!make(1, 2, 3).any_of(equal_to(4)));
+
+		CHECK(make(1, 2, 3).any_of());
+		CHECK(make(1, false, 3).any_of());
+		CHECK(!make().any_of());
+		CHECK(!make(false, false, false).any_of());
 	}
 
 	SECTION("count"){
@@ -21,7 +45,7 @@ test_enumerable_functions(Maker make){
 		CHECK(make(1, 2, 3, 4, 5).count_if(is_over(3)) == 3);
 		CHECK(make(1, 1, 2, 2, 2, 3).count_if(is_equal(2)) == 3);
 		CHECK(make(1, 1, 2, 2, 2, 3).count(2) == 3);
-		CHECK(make("homu", "homu", "mami").count(std::string("homu")) == 2);
+		CHECK(make("homu", "homu", "mami").count("homu"s) == 2);
 	}
 
 	SECTION("each"){
@@ -52,7 +76,6 @@ test_enumerable_functions(Maker make){
 	}
 
 	SECTION("map"){
-		using namespace std::literals::string_literals;
 		auto to_string = [](auto it){ return std::to_string(it); };
 
 		CHECK(make(1, 2, 3).map(twice) == make(2, 4, 6));

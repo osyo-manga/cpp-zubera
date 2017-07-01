@@ -15,6 +15,10 @@ constexpr auto is_over = [](auto x) constexpr {
 	return [x](auto n) constexpr { return n >= x; };
 };
 
+constexpr auto equal_to = [](auto x) constexpr {
+	return [x](auto it) constexpr { return x == it; };
+};
+
 constexpr auto is_under = [](auto x) constexpr {
 	return [x](auto n) constexpr { return n <= x; };
 };

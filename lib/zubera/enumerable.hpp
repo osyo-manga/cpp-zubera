@@ -28,6 +28,21 @@ struct enumerable{
 		return count() == count_if(std::forward<Pred>(pred));
 	}
 
+	constexpr bool
+	all_of() const {
+		return self().all_of([](auto it){ return it; });
+	}
+
+	template<typename Pred>
+	constexpr bool
+	any_of(Pred&& pred) const{
+		return count_if(std::forward<Pred>(pred)) >= 1;
+	}
+
+	constexpr bool
+	any_of() const{
+		return self().any_of([](auto it){ return it; });
+	}
 
 	template<typename Pred>
 	constexpr std::size_t
