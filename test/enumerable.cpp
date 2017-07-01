@@ -13,15 +13,15 @@ test_enumerable_functions(Maker make){
 	SECTION("all_of"){
 		CHECK(make().all_of(is_under(3)));
 		CHECK(make(1, 2, 3).all_of(is_under(3)));
-		CHECK(!make(1, 2, 3, 4).all_of(is_under(3)));
 		CHECK(make(false, false, false).all_of([](auto...){ return true; }));
+		CHECK_FALSE(make(1, 2, 3, 4).all_of(is_under(3)));
 
 		CHECK(make(1, 2, 3, 4).all_of());
 		CHECK(make(true).all_of());
 		CHECK(make().all_of());
 		CHECK(make("test").all_of());
 		CHECK(make("").all_of());
-		CHECK(!make(false, true).all_of());
+		CHECK_FALSE(make(false, true).all_of());
 	}
 
 	SECTION("any_of"){
@@ -29,14 +29,14 @@ test_enumerable_functions(Maker make){
 		CHECK(make(1, 2, 3).any_of(equal_to(2)));
 		CHECK(make(1, 2, 3).any_of(equal_to(3)));
 		CHECK(make(1, 2, 3).any_of(is_over(0)));
-		CHECK(!make().any_of(equal_to(1)));
-		CHECK(!make().any_of([](auto...){ return false; }));
-		CHECK(!make(1, 2, 3).any_of(equal_to(4)));
+		CHECK_FALSE(make().any_of(equal_to(1)));
+		CHECK_FALSE(make().any_of([](auto...){ return false; }));
+		CHECK_FALSE(make(1, 2, 3).any_of(equal_to(4)));
 
 		CHECK(make(1, 2, 3).any_of());
 		CHECK(make(1, false, 3).any_of());
-		CHECK(!make().any_of());
-		CHECK(!make(false, false, false).any_of());
+		CHECK_FALSE(make().any_of());
+		CHECK_FALSE(make(false, false, false).any_of());
 	}
 
 	SECTION("collect"){
@@ -90,8 +90,8 @@ test_enumerable_functions(Maker make){
 		CHECK( v.find(is_over(3)));
 		CHECK(*v.find(is_over(3)) == 5);
 		CHECK(*v.find(is_even) == 4);
-		CHECK(!v.find(is_over(6)));
-		CHECK(!make().find(is_over(6)));
+		CHECK_FALSE(v.find(is_over(6)));
+		CHECK_FALSE(make().find(is_over(6)));
 	}
 
 	SECTION("inject"){
