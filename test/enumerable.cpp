@@ -62,6 +62,15 @@ test_enumerable_functions(Maker make){
 		CHECK((result == std::vector<int>{1, 2, 3, 1, 2, 3, 1, 2, 3}));
 	}
 
+	SECTION("detect"){
+		auto v = make(5, 3, 1, 4, 2);
+		CHECK( v.detect(is_over(3)));
+		CHECK(*v.detect(is_over(3)) == 5);
+		CHECK(*v.detect(is_even) == 4);
+		CHECK_FALSE(v.detect(is_over(6)));
+		CHECK_FALSE(make().detect(is_over(6)));
+	}
+
 	SECTION("each"){
 		using vec_t = std::vector<int>;
 		vec_t each_result;

@@ -81,6 +81,12 @@ struct enumerable{
 // 		return result;
 	}
 
+	template<typename Pred>
+	constexpr auto
+	detect(Pred&& pred) const{
+		return self().find(std::forward<Pred>(pred));
+	}
+
 	template<typename F>
 	constexpr auto
 	each_with_index(F f) const{
@@ -92,7 +98,7 @@ struct enumerable{
 
 	template<typename Pred>
 	constexpr auto
-	find(Pred&& pred){
+	find(Pred&& pred) const{
 		using opt_t = std::optional<value_t>;
 		return self().inject(opt_t{ std::nullopt }, [&](auto result, auto it) constexpr {
 			return result   ? result
