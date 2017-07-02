@@ -22,7 +22,7 @@ TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
 	constexpr auto equal_to_variant = [](auto var, auto value) constexpr {
 		bool result = false;
 		std::visit([&](auto it){
-			result = it == value;
+			result = (it == value);
 		}, var);
 		return result;
 	};
@@ -39,7 +39,7 @@ TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
 
 	SECTION("select"){
 		auto t = tuple(1, 'c', 3.14).concat(tuple(1, 'c'));
-		assert(t.equal_to(tuple(1, 'c', 3.14, 1, 'c'), equal_to_variant));
-		assert(type<zubera::vector<std::any>> == zubera::tuple{}.select(is_over(3)));
+// 		CHECK(t.equal_to(tuple(1, 'c', 3.14, 1, 'c'), equal_to_variant));
+		CHECK(type<zubera::vector<std::any>> == zubera::tuple{}.select(is_over(3)));
 	}
 }
