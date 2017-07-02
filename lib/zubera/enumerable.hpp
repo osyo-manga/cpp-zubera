@@ -14,7 +14,7 @@ template<
 >
 struct enumerable{
 	using self_t = Derived;
-	using Tarray_t = Result<Value>;
+	using array_t = Result<Value>;
 	using value_t = Value;
 
 	constexpr self_t const&
@@ -87,6 +87,11 @@ struct enumerable{
 		return self().find(std::forward<Pred>(pred));
 	}
 
+	constexpr auto
+	drop(std::size_t n) const{
+		
+	}
+
 	template<typename F>
 	constexpr auto
 	each_with_index(F f) const{
@@ -129,7 +134,7 @@ struct enumerable{
 	template<typename Pred>
 	auto
 	select(Pred pred) const{
-		return self().inject(Tarray_t{}, [&pred](auto sum, auto it){
+		return self().inject(array_t{}, [&pred](auto sum, auto it){
 			return pred(it) ? sum.push(it) : sum;
 		});
 	}
