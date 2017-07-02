@@ -93,7 +93,6 @@ struct enumerable{
 	template<typename Pred>
 	constexpr auto
 	find(Pred&& pred){
-// 		std::optional<value_t> result{ std::nullopt };
 		using opt_t = std::optional<value_t>;
 		return self().inject(opt_t{ std::nullopt }, [&](auto result, auto it) constexpr {
 			return result   ? result
