@@ -19,13 +19,13 @@ TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
 	using namespace test;
 	using zubera::tuple;
 
-	constexpr auto equal_to_variant = [](auto var, auto value) constexpr {
-		bool result = false;
-		std::visit([&](auto it){
-			result = (it == value);
-		}, var);
-		return result;
-	};
+// 	constexpr auto equal_to_variant = [](auto var, auto value) constexpr {
+// 		bool result = false;
+// 		std::visit([&](auto it){
+// 			result = (it == value);
+// 		}, var);
+// 		return result;
+// 	};
 
 	auto is_int = test::overloaded{
 		[](int){ return true; },
