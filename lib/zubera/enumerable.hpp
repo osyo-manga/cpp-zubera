@@ -19,7 +19,7 @@ struct enumerable{
 
 	constexpr self_t const&
 	self() const{
-		return *static_cast<self_t const*>(this);
+		return static_cast<self_t const&>(*this);
 	}
 
 
@@ -89,7 +89,13 @@ struct enumerable{
 
 	constexpr auto
 	drop(std::size_t n) const{
-		
+		array_t result{};
+		self().each_with_index([&](auto it, auto i){
+			if( i <= n ){
+				result.push_back(it);
+			}
+		});
+		return result;
 	}
 
 	template<typename F>
@@ -111,7 +117,6 @@ struct enumerable{
 				 : std::nullopt;
 		});
 	}
-
 
 	template<typename Init, typename F>
 	constexpr auto
