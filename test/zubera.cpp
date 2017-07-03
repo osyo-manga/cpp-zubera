@@ -25,27 +25,52 @@ test(){
 
 }  // namespace static_
 
+template<
+	typename T,
+	typename Each
+>
+struct enumerator_ : zubera::enumerable<enumerator_<T, Each>, T>{
+	enumerator_(Each each) : each_(each){}
+
+	template<typename F>
+	constexpr auto
+	each(F f) const{
+		return each_(f);
+	}
+	
+	Each each_;
+};
+
+template<typename T, typename Each>
+constexpr enumerator_<T, Each>
+enumerator(Each each){
+	return { each };
+}
+
 int
 main(){
 	static_::test();
 	using namespace test;
 	using namespace std::literals::string_literals;
+	auto make_v = test::overloaded{
+		[](auto x, auto... xs){ return zubera::vector<decltype(x)>{ x, xs... }; },
+		[](){ return zubera::vector<int>{}; }
+	};
 
-	{
-		auto make = test::overloaded{
-			[](auto x, auto... xs){ return zubera::vector<decltype(x)>{ x, xs... }; },
-			[](){ return zubera::vector<int>{}; }
-		};
-		
-		auto result = make(1, 2, 3).find(equal_to(-1));
-		std::cout << *result << std::endl;
-	}
+// 	auto v = make_v(1, 2, 3, 4, 5);
 
-	auto make = [](auto... xs){ return zubera::tuple{xs...}; };
+	auto enum_ = enumerator<int>([&](auto y){
+		make_v(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).each([&](auto it){
+			if( it % 2 == 0 ){
+				y(it);
+			}
+		});
+	});
 
-// 	std::cout << make().all_of(is_under(3));
-// 	std::cout << zubera::vector<int>{}.all_of(is_under(3));
+	enum_.each([](auto it){
+		std::cout << it << std::endl;
+	});
 
-// 	make().concat(make(3, 4)) == make(3, 4);
+
 	return 0;
 }
