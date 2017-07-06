@@ -70,7 +70,7 @@ struct enumerator : zubera::enumerable<enumerator<T, Eacher>, T>{
 	with_index(F f) const{
 		auto i = 0;
 		return eacher(make_yielder([&](auto it) constexpr{
-			return f(it, ++i);
+			return f(it, i++);
 		}));
 	}
 
