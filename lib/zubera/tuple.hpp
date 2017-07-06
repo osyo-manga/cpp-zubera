@@ -95,7 +95,7 @@ struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, tuple_detail::var
 
 	template<typename F>
 	constexpr auto
-	map(F f) const{
+	map(F&& f) const{
 		return std::apply([&](auto... args){
 			return zubera::tuple{ f(args)... };
 		}, (std::tuple<Args...>)(*this));
