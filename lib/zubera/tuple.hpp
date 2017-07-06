@@ -83,6 +83,8 @@ using special_decay_t = typename unwrap_refwrapper<typename std::decay<T>::type>
 
 template<typename... Args>
 struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, tuple_detail::variant_t<Args...>>{
+	using enum_ = enumerable<tuple<Args...>, tuple_detail::variant_t<Args...>>;
+
 	using std::tuple<Args...>::tuple;
 
 	template<typename F>
@@ -93,13 +95,19 @@ struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, tuple_detail::var
 		}, std::tuple<Args...>(*this));
 	}
 
-	template<typename F>
-	constexpr auto
-	map(F&& f) const{
-		return std::apply([&](auto... args){
-			return zubera::tuple{ f(args)... };
-		}, (std::tuple<Args...>)(*this));
-	}
+	// [WIP]
+// 	template<typename F>
+// 	constexpr auto
+// 	map(F&& f) const{
+// 		return std::apply([&](auto... args){
+// 			return zubera::tuple{ f(args)... };
+// 		}, (std::tuple<Args...>)(*this));
+// 	}
+//
+// 	constexpr auto
+// 	map() const{
+// 		return make_enumerator<typename enum_::value_t>([this](auto y) constexpr{ return this->map(y); });
+// 	}
 };
 
 template<typename... Args>

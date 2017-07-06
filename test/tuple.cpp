@@ -16,6 +16,7 @@ constexpr type_<T> type{};
 
 
 TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
+	using namespace std::literals::string_literals;
 	using namespace test;
 	using zubera::tuple;
 
@@ -39,8 +40,14 @@ TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
 
 	SECTION("select"){
 // 		auto t = tuple(1, 'c', 3.14).concat(tuple(1, 'c'));
-		CHECK(zubera::tuple{}.select(is_over(3)).is_empty());
+		CHECK((zubera::tuple{1, 2}.select(is_over(3)).is_empty()));
 // 		CHECK(t.equal_to(tuple(1, 'c', 3.14, 1, 'c'), equal_to_variant));
 // 		CHECK(type<zubera::vector<std::any>> == zubera::tuple{}.select(is_over(3)));
+	}
+
+	SECTION("map"){
+		CHECK((zubera::tuple{1, 2, 3}.map([](auto) constexpr{
+			return "homu"s;
+		}) == zubera::vector{"homu"s, "homu"s, "homu"s}));
 	}
 }

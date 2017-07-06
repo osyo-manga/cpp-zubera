@@ -8,6 +8,7 @@ namespace zubera{
 
 template<typename T>
 struct vector : std::vector<T>, enumerable<vector<T>, T, vector>{
+	using enumerable_value_type = T;
 	using std::vector<T>::vector;
 	using self_t = vector<T>;
 
@@ -20,14 +21,15 @@ struct vector : std::vector<T>, enumerable<vector<T>, T, vector>{
 		return *this;
 	}
 
-
 	auto
 	push(T const& new_value) const{
-		std::vector<T> v = *this;
+		std::vector<T> v{this->begin(), this->end()};
 		v.push_back(new_value);
 		return self_t{ v.begin(), v.end() };
 	}
 };
+template<typename T, typename...Args>
+vector(T&&, Args...) -> vector<std::decay_t<T>>;
 
 template<typename T, typename U>
 auto

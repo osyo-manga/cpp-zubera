@@ -4,6 +4,8 @@
 #include "./catch/catch.hpp"
 #include "../lib/zubera.hpp"
 
+#define CHECK_TYPE(a, b) CHECK_TYPE(std::is_same<decltype(a), decltype(b)>{});
+
 
 namespace test{
 

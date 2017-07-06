@@ -6,8 +6,21 @@
 
 namespace zubera{
 
+
+template<
+	typename T,
+	typename Eacher
+>
+struct enumerator;
+
+template<typename T, typename Eacher>
+constexpr enumerator<T, std::decay_t<Eacher>>
+make_enumerator(Eacher&& eacher);
+
+
 template<typename T>
 struct vector;
+
 
 template<
 	typename Derived, typename Value, template<class> class Result = vector
@@ -121,27 +134,38 @@ struct enumerable{
 	template<typename Init, typename F>
 	constexpr auto
 	inject(Init&& init, F f) const{
-		self().each([&](auto n) constexpr {
-			init = f(std::forward<Init>(init), n);
+		self().each([&](auto it) constexpr {
+			init = f(std::forward<Init>(init), it);
+			return it;
 		});
 		return init;
 	}
 
 	template<typename F>
-	auto
+	constexpr auto
 	map(F&& f) const{
-		using result_t = Result<decltype(f(std::declval<Value>()))>;
-		return self().inject(result_t{}, [&f](auto result, auto it){
+		using result_t = Result<decltype(f(std::declval<value_t>()))>;
+		return self().inject(result_t{}, [&f](auto result, auto it) constexpr{
 			return result.push(f(it));
 		});
 	}
 
+	constexpr auto
+	map() const{
+		return make_enumerator<value_t>([this](auto y) constexpr{ return this->map(y); });
+	}
+
 	template<typename Pred>
-	auto
-	select(Pred pred) const{
-		return self().inject(array_t{}, [&pred](auto sum, auto it){
+	constexpr auto
+	select(Pred&& pred) const{
+		return self().inject(array_t{}, [&pred](auto sum, auto it) constexpr{
 			return pred(it) ? sum.push(it) : sum;
 		});
+	}
+
+	constexpr auto
+	select() const{
+		return make_enumerator<value_t>([this](auto y) constexpr{ return this->select(y); });
 	}
 
 	constexpr auto
@@ -164,13 +188,13 @@ struct enumerable{
 
 	template<typename T, typename F>
 	constexpr bool
-	equal_to(T&& rhs, F f) const{
+	equal(T&& rhs, F f) const{
 		if( self().count() != rhs.count() ){
 			return false;
 		}
 		auto result = true;
-		self().each_with_index([&](auto lhs, auto i){
-			rhs.each_with_index([&](auto rhs, auto j){
+		self().each_with_index([&](auto lhs, auto i) constexpr{
+			rhs.each_with_index([&](auto rhs, auto j) constexpr{
 				if( result && i == j ){
 					result = f(lhs, rhs);
 				}
@@ -182,7 +206,7 @@ struct enumerable{
 	template<typename T>
 	constexpr bool
 	equal(T&& rhs) const{
-		return self().equal_to(std::forward<T>(rhs), [](auto a, auto b) constexpr { return a == b; });
+		return self().equal(std::forward<T>(rhs), [](auto a, auto b) constexpr { return a == b; });
 	}
 
 	template<typename T>
@@ -213,6 +237,7 @@ operator <<(std::ostream& os, enumerable<Derived, T, Result> const& e){
 
 }  // namespace zubera
 
+#include "./enumerator.hpp"
 #include "./vector.hpp"
 
 #endif /* ZUBERA_ENUMERABLE */

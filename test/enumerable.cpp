@@ -110,6 +110,7 @@ test_enumerable_functions(Maker make){
 	SECTION("map"){
 		CHECK(make(1, 2, 3).map(twice) == make(2, 4, 6));
 		CHECK(make(1, 2, 3).map(to_string) == make("1"s, "2"s, "3"s));
+		CHECK(make(1, 2, 3, 4).map().select(is_even) == make(2, 4));
 	}
 
 	SECTION("select"){
