@@ -50,13 +50,6 @@ struct enumerator : zubera::enumerable<enumerator<T, Eacher>, T>{
 		return { std::forward<F>(f) };
 	}
 
-
-	template<class U>
-	struct A {
-		A(U&& t) : value(t){}
-		T value;
-	};
-
 	constexpr enumerator(Eacher eacher) : eacher(eacher){}
 
 	template<typename F>
