@@ -111,6 +111,9 @@ test_enumerable_functions(Maker make){
 		CHECK(make(1, 2, 3).map(twice) == make(2, 4, 6));
 		CHECK(make(1, 2, 3).map(to_string) == make("1"s, "2"s, "3"s));
 		CHECK(make(1, 2, 3, 4).map().select(is_even) == make(2, 4));
+
+		auto map = make(1, 2, 3).map();
+		CHECK((map.to_a() == make(1, 2, 3)));
 	}
 
 	SECTION("select"){
@@ -119,6 +122,9 @@ test_enumerable_functions(Maker make){
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_under(0)) == make());
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_under(0)).is_empty());
 		CHECK(make().select(is_under(0)).is_empty());
+
+		auto select = make(1, 2, 3).select();
+		CHECK((select.to_a() == make(1, 2, 3)));
 	}
 
 

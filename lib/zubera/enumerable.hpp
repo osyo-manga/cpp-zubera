@@ -152,7 +152,7 @@ struct enumerable{
 
 	constexpr auto
 	map() const{
-		return make_enumerator<value_t>([this](auto y) constexpr{ return this->map(y); });
+		return make_enumerator<value_t>([self = this->self()](auto y) constexpr{ return self.map(y); });
 	}
 
 	template<typename Pred>
@@ -165,7 +165,7 @@ struct enumerable{
 
 	constexpr auto
 	select() const{
-		return make_enumerator<value_t>([this](auto y) constexpr{ return this->select(y); });
+		return make_enumerator<value_t>([self = this->self()](auto y) constexpr{ return self.select(y); });
 	}
 
 	constexpr auto
