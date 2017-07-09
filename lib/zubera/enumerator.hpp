@@ -58,13 +58,18 @@ struct enumerator : zubera::enumerable<enumerator<T, Eacher>, T>{
 		return eacher(make_yielder(f));
 	}
 
+	template<typename Init, typename F>
+	constexpr auto
+	with_index(Init&& init, F&& f) const{
+		return eacher(make_yielder([&](auto it) constexpr{
+			return f(it, init++);
+		}));
+	}
+
 	template<typename F>
 	constexpr auto
-	with_index(F f) const{
-		auto i = 0;
-		return eacher(make_yielder([&](auto it) constexpr{
-			return f(it, i++);
-		}));
+	with_index(F&& f) const{
+		return with_index(0, std::forward<F>(f));
 	}
 
 private:
@@ -75,6 +80,22 @@ template<typename T, typename Eacher>
 constexpr enumerator<T, std::decay_t<Eacher>>
 make_enumerator(Eacher&& eacher){
 	return { eacher };
+}
+
+template<typename T, typename Obj, typename F>
+constexpr auto
+make_enumerator(Obj&& obj, F&& f){
+	return make_enumerator<T>([=](auto y) constexpr{ return f(obj, y); });
+}
+
+template<typename T>
+constexpr auto
+irange(T&& first, T&& last){
+	return make_enumerator<T>([=](auto y){
+		for(auto i = first ; i < last ; ++i){
+			y(i);
+		}
+	});
 }
 
 }  // namespace zubera
