@@ -73,8 +73,9 @@ test_enumerable_functions(Maker make){
 
 	SECTION("drop"){
 		auto v = make(1, 2, 3, 4, 5);
-		CHECK(v.drop(3) == make(1, 2, 3));
-		CHECK(v.drop(10) == make(1, 2, 3, 4, 5));
+		CHECK(v.drop(0) == make(1, 2, 3, 4, 5));
+		CHECK(v.drop(3) == make(4, 5));
+		CHECK(v.drop(10) == make());
 	}
 
 	SECTION("each"){
@@ -131,6 +132,12 @@ test_enumerable_functions(Maker make){
 
 		auto select = make(1, 2, 3).select();
 		CHECK((select.to_a() == make(1, 2, 3)));
+	}
+
+	SECTION("take"){
+		auto v = make(1, 2, 3, 4, 5);
+		CHECK(v.take(3) == make(1, 2, 3));
+		CHECK(v.take(10) == make(1, 2, 3, 4, 5));
 	}
 
 

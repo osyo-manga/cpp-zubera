@@ -103,7 +103,7 @@ struct enumerable{
 	constexpr auto
 	drop(std::size_t n) const{
 		return self().select().with_index([&](auto, auto i) constexpr{
-			return i <= n;
+			return i >= n;
 		});
 	}
 
@@ -165,9 +165,18 @@ struct enumerable{
 	}
 
 	constexpr auto
+	take(std::size_t n) const{
+		return self().select().with_index([&](auto, auto i) constexpr{
+			return i <= n;
+		});
+	}
+
+	constexpr auto
 	to_a() const{
 		return self().select([](auto){ return true; });
 	}
+
+
 
 	template<typename F>
 	constexpr auto
@@ -176,6 +185,8 @@ struct enumerable{
 			return f(self, y);
 		});
 	}
+
+
 
 	constexpr bool
 	is_empty() const{
