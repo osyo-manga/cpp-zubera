@@ -102,7 +102,7 @@ struct enumerable{
 
 	constexpr auto
 	drop(std::size_t n) const{
-		return self().select().with_index([&](auto, auto i) constexpr{
+		return self().select().with_index([&](auto, std::size_t i) constexpr{
 			return i >= n;
 		});
 	}
@@ -166,8 +166,8 @@ struct enumerable{
 
 	constexpr auto
 	take(std::size_t n) const{
-		return self().select().with_index([&](auto, auto i) constexpr{
-			return i <= n;
+		return self().select().with_index([&](auto, std::size_t i) constexpr{
+			return i < n;
 		});
 	}
 
