@@ -91,7 +91,7 @@ make_enumerator(Obj&& obj, F&& f){
 template<typename T>
 constexpr auto
 irange(T&& first, T&& last){
-	return make_enumerator<T>([=](auto y){
+	return make_enumerator<T>([=](auto y) constexpr{
 		for(auto i = first ; i < last ; ++i){
 			y(i);
 		}

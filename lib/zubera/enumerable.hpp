@@ -44,7 +44,7 @@ struct enumerable{
 
 	constexpr bool
 	all_of() const {
-		return self().all_of([](auto it){ return it; });
+		return self().all_of([](auto it) constexpr{ return it; });
 	}
 
 	template<typename Pred>
@@ -55,7 +55,7 @@ struct enumerable{
 
 	constexpr bool
 	any_of() const{
-		return self().any_of([](auto it){ return it; });
+		return self().any_of([](auto it) constexpr{ return it; });
 	}
 
 	template<typename F>
@@ -80,7 +80,7 @@ struct enumerable{
 	template<typename T>
 	constexpr auto
 	count(T&& t) const{
-		return self().count_if([&t](auto it){ return it == t; });
+		return self().count_if([&t](auto it) constexpr{ return it == t; });
 	}
 
 	template<typename F>
@@ -110,7 +110,7 @@ struct enumerable{
 	template<typename F>
 	constexpr auto
 	each_with_index(F f) const{
-		return self().inject(0, [&](auto i, auto it) constexpr {
+		return self().inject(0, [&](auto i, auto it) constexpr{
 			f(it, i);
 			return ++i;
 		});
@@ -120,7 +120,7 @@ struct enumerable{
 	constexpr auto
 	find(Pred&& pred) const{
 		using opt_t = std::optional<value_t>;
-		return self().inject(opt_t{ std::nullopt }, [&](auto result, auto it) constexpr {
+		return self().inject(opt_t{ std::nullopt }, [&](auto result, auto it) constexpr{
 			return result   ? result
 				 : pred(it) ? std::make_optional(it)
 				 : std::nullopt;
@@ -130,7 +130,7 @@ struct enumerable{
 	template<typename Init, typename F>
 	constexpr auto
 	inject(Init&& init, F f) const{
-		self().each([&](auto it) constexpr {
+		self().each([&](auto it) constexpr{
 			init = f(std::forward<Init>(init), it);
 			return it;
 		});
@@ -173,7 +173,7 @@ struct enumerable{
 
 	constexpr auto
 	to_a() const{
-		return self().select([](auto){ return true; });
+		return self().select([](auto) constexpr{ return true; });
 	}
 
 
@@ -196,7 +196,7 @@ struct enumerable{
 	template<typename T>
 	constexpr auto
 	concat(T&& t) const{
-		return t.inject(self().to_a(), [](auto sum, auto it) constexpr {
+		return t.inject(self().to_a(), [](auto sum, auto it) constexpr{
 			return sum.push(it);
 		});
 	}
@@ -221,7 +221,7 @@ struct enumerable{
 	template<typename T>
 	constexpr bool
 	equal(T&& rhs) const{
-		return self().equal(std::forward<T>(rhs), [](auto a, auto b) constexpr { return a == b; });
+		return self().equal(std::forward<T>(rhs), [](auto a, auto b) constexpr{ return a == b; });
 	}
 
 	template<typename T>

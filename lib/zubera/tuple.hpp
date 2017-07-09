@@ -84,15 +84,21 @@ using special_decay_t = typename unwrap_refwrapper<typename std::decay<T>::type>
 template<typename... Args>
 struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, tuple_detail::variant_t<Args...>>{
 	using enum_ = enumerable<tuple<Args...>, tuple_detail::variant_t<Args...>>;
+	using value_t = typename enum_::value_t;
 
 	using std::tuple<Args...>::tuple;
 
 	template<typename F>
 	constexpr auto
 	each(F f) const{
-		std::apply([&](auto... args){
+		std::apply([&](auto... args) constexpr{
 			(f(args), ...);
 		}, std::tuple<Args...>(*this));
+	}
+
+	constexpr auto
+	each() const{
+		return enum_::to_enum([](auto self, auto y) constexpr{ return self.each(y); });
 	}
 
 	// [WIP]
