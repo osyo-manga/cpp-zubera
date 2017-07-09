@@ -102,13 +102,9 @@ struct enumerable{
 
 	constexpr auto
 	drop(std::size_t n) const{
-		array_t result{};
-		self().each_with_index([&](auto it, auto i){
-			if( i <= n ){
-				result.push_back(it);
-			}
+		return self().select().with_index([&](auto, auto i) constexpr{
+			return i <= n;
 		});
-		return result;
 	}
 
 	template<typename F>
@@ -152,7 +148,7 @@ struct enumerable{
 
 	constexpr auto
 	map() const{
-		return make_enumerator<value_t>([self = this->self()](auto y) constexpr{ return self.map(y); });
+		return to_enum([](auto self, auto y) constexpr{ return self.map(y); });
 	}
 
 	template<typename Pred>
@@ -165,12 +161,20 @@ struct enumerable{
 
 	constexpr auto
 	select() const{
-		return make_enumerator<value_t>([self = this->self()](auto y) constexpr{ return self.select(y); });
+		return to_enum([](auto self, auto y) constexpr{ return self.select(y); });
 	}
 
 	constexpr auto
 	to_a() const{
 		return self().select([](auto){ return true; });
+	}
+
+	template<typename F>
+	constexpr auto
+	to_enum(F&& f) const{
+		return make_enumerator<value_t>([self = this->self(), f](auto y) constexpr{
+			return f(self, y);
+		});
 	}
 
 	constexpr bool

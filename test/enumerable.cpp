@@ -71,6 +71,12 @@ test_enumerable_functions(Maker make){
 		CHECK_FALSE(make().detect(is_over(6)));
 	}
 
+	SECTION("drop"){
+		auto v = make(1, 2, 3, 4, 5);
+		CHECK(v.drop(3) == make(1, 2, 3));
+		CHECK(v.drop(10) == make(1, 2, 3, 4, 5));
+	}
+
 	SECTION("each"){
 		using vec_t = std::vector<int>;
 		vec_t each_result;
