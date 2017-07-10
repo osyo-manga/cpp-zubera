@@ -62,6 +62,7 @@ test_enumerable_functions(Maker make){
 		CHECK((result == std::vector<int>{1, 2, 3, 1, 2, 3, 1, 2, 3}));
 
 		CHECK(make(1, 2).cycle(3) == make(1, 2, 1, 2, 1, 2));
+		CHECK(make(1, 2).cycle(0) == make());
 	}
 
 	SECTION("detect"){
