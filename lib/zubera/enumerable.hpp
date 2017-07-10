@@ -85,13 +85,20 @@ struct enumerable{
 
 	template<typename F>
 	constexpr auto
-	cycle(std::size_t size, F&& f) const{
+	cycle(std::size_t count, F&& f) const{
 // 		Result<Result<Value>> result{};
 // 		auto a = self().to_a();
-		for(std::size_t i = 0 ; i < size ; ++i){
+		for(std::size_t i = 0 ; i < count ; ++i){
 			self().each(f);
 		}
 // 		return result;
+	}
+
+	constexpr auto
+	cycle(std::size_t count) const{
+		return to_enum([=](auto self, auto y){
+			return self.cycle(count, y);
+		});
 	}
 
 	template<typename Pred>
