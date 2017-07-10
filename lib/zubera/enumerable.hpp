@@ -129,7 +129,7 @@ struct enumerable{
 
 	template<typename Init, typename F>
 	constexpr auto
-	inject(Init&& init, F f) const{
+	inject(Init init, F f) const{
 		self().each([&](auto it) constexpr{
 			init = f(init, it);
 			return it;
