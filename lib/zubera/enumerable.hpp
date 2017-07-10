@@ -249,11 +249,12 @@ template<
 >
 std::ostream&
 operator <<(std::ostream& os, enumerable<Derived, T, Result> const& e){
-	os << "[ ";
-	e.self().each([&os](auto n){
-		os << n << ", ";
+	auto last_index = e.count() - 1;
+	os << "[";
+	e.each_with_index([&](auto it, auto i){
+		os << it << (i == last_index ? "" : ", ");
 	});
-	os << " ]";
+	os << "]";
 	return os;
 }
 
