@@ -89,7 +89,7 @@ struct enumerable{
 // 		Result<Result<Value>> result{};
 // 		auto a = self().to_a();
 		for(std::size_t i = 0 ; i < size ; ++i){
-			self().each(std::forward<F>(f));
+			self().each(f);
 		}
 // 		return result;
 	}
@@ -131,7 +131,7 @@ struct enumerable{
 	constexpr auto
 	inject(Init&& init, F f) const{
 		self().each([&](auto it) constexpr{
-			init = f(std::forward<Init>(init), it);
+			init = f(init, it);
 			return it;
 		});
 		return init;

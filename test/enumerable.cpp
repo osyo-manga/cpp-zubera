@@ -112,6 +112,7 @@ test_enumerable_functions(Maker make){
 
 	SECTION("inject"){
 		CHECK((make(1, 2, 3).inject(0, plus) == 6));
+		CHECK((make('m', 'a', 'd', 'o').inject("homu"s, plus) == "homumado"));
 	}
 
 	SECTION("map"){
