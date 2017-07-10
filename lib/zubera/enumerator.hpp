@@ -55,12 +55,12 @@ struct enumerator : zubera::enumerable<enumerator<T, Eacher>, T>{
 	template<typename F>
 	constexpr auto
 	each(F&& f) const{
-		return eacher(make_yielder(f));
+		return eacher(make_yielder(std::forward<F>(f)));
 	}
 
 	template<typename Init, typename F>
 	constexpr auto
-	with_index(Init&& init, F&& f) const{
+	with_index(Init init, F&& f) const{
 		return eacher(make_yielder([&](auto it) constexpr{
 			return f(it, init++);
 		}));

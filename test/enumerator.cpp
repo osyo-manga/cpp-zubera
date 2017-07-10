@@ -31,10 +31,12 @@ TEST_CASE("zubera::enumerator", "[zubera][enumerator]"){
 
 		SECTION("with args"){
 			std::vector<int> indices;
-			range0_5.with_index(-3, [&](auto, auto i){
+			int value = -3;
+			range0_5.with_index(value, [&](auto, auto i){
 				indices.push_back(i);
 			});
 			CHECK((indices == zubera::vector{-3, -2, -1, 0, 1}));
+			CHECK(value == -3);
 		}
 	}
 
