@@ -204,6 +204,13 @@ struct enumerable{
 		});
 	}
 
+	template<typename Pred>
+	constexpr auto
+	take_while(Pred&& pred) const{
+		auto index = self().find_index([&](auto it){ return !pred(it); });
+		return self().take(index ? *index : self().count());
+	}
+
 	constexpr auto
 	to_a() const{
 		return self().select([](auto) constexpr{ return true; });

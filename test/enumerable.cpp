@@ -181,6 +181,13 @@ test_enumerable_functions(Maker make){
 		CHECK(v.take(10) == make(1, 2, 3, 4, 5));
 	}
 
+	SECTION("take_while"){
+		auto v = make(3, 1, 5, 4, 9, 7, 8, 2);
+		CHECK(v.take_while(is_odd) == make(3, 1, 5));
+		CHECK(v.take_while(is_under(8)) == make(3, 1, 5, 4));
+		CHECK(v.take_while(is_equal(3)) == make(3));
+		CHECK(v.take_while(is_under(0)) == make());
+	}
 
 	SECTION("concat"){
 		CHECK(make(1, 2).concat(make(3, 4)) == make(1, 2, 3, 4));
