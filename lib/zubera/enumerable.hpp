@@ -114,6 +114,13 @@ struct enumerable{
 		});
 	}
 
+	template<typename Pred>
+	constexpr auto
+	drop_while(Pred&& pred) const{
+		auto index = self().find_index([&](auto it){ return !pred(it); });
+		return self().drop(index ? *index : self().count());
+	}
+
 	template<typename F>
 	constexpr auto
 	each_with_index(F f) const{

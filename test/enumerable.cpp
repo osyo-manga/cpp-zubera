@@ -81,6 +81,14 @@ test_enumerable_functions(Maker make){
 		CHECK(v.drop(10) == make());
 	}
 
+	SECTION("drop_while"){
+		auto v = make(3, 1, 5, 4, 9, 7, 8, 2);
+		CHECK(v.drop_while(is_odd) == make(4, 9, 7, 8, 2));
+		CHECK(v.drop_while(is_under(8)) == make(9, 7, 8, 2));
+		CHECK(v.drop_while(is_equal(3)) == make(1, 5, 4, 9, 7, 8, 2));
+		CHECK(v.drop_while(is_under(9999)) == make());
+	}
+
 	SECTION("each"){
 		using vec_t = std::vector<int>;
 		vec_t each_result;
