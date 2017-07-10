@@ -126,6 +126,7 @@ struct enumerable{
 	template<typename Pred>
 	constexpr auto
 	find(Pred&& pred) const{
+		// NOTE:Not working by constexpr
 		using opt_t = std::optional<value_t>;
 		return self().inject(opt_t{ std::nullopt }, [&](auto result, auto it) constexpr{
 			return result   ? result
@@ -134,16 +135,17 @@ struct enumerable{
 		});
 	}
 
-// 	template<typename Pred>
-// 	constexpr auto
-// 	find_index(Pred&& pred) const{
-// 		using opt_t = std::optional<std::size_t>;
-// 		return self().inject().with_index(opt_t{ std::nullopt }, [&](auto result, auto it, auto i) constexpr{
-// 			return result   ? result
-// 				 : pred(it) ? std::make_optional(i)
-// 				 : std::nullopt;
-// 		});
-// 	}
+	template<typename Pred>
+	constexpr auto
+	find_index(Pred&& pred) const{
+		int result = -1;
+		self().each_with_index([&](auto it, auto i){
+			if( result == -1 && pred(it) ){
+				result = i;
+			}
+		});
+		return result == -1 ? std::nullopt : std::make_optional(std::size_t(result));
+	}
 
 	template<typename Init, typename F>
 	constexpr auto

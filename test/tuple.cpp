@@ -45,6 +45,11 @@ TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
 // 		CHECK(type<zubera::vector<std::any>> == zubera::tuple{}.select(is_over(3)));
 	}
 
+	SECTION("find_index"){
+		constexpr auto result = tuple{3, 1, 6, 4}.find_index(is_even);
+		static_assert(*result == 2, "");
+	}
+
 	SECTION("map"){
 		CHECK((zubera::tuple{1, 2, 3}.map([](auto) constexpr{
 			return "homu"s;

@@ -108,9 +108,32 @@ test_enumerable_functions(Maker make){
 		auto v = make(5, 3, 1, 4, 2);
 		CHECK( v.find(is_over(3)));
 		CHECK(*v.find(is_over(3)) == 5);
+		CHECK( v.find(is_under(2)));
+		CHECK(*v.find(is_under(2)) == 1);
 		CHECK(*v.find(is_even) == 4);
 		CHECK_FALSE(v.find(is_over(6)));
 		CHECK_FALSE(make().find(is_over(6)));
+
+		std::vector<int> eachs{};
+		v.find([&](auto it){
+			eachs.push_back(it);
+			return it % 2 == 0;
+		});
+		CHECK((eachs == std::vector<int>{5, 3, 1, 4}));
+	}
+
+	SECTION("find_index"){
+		auto v = make(5, 3, 1, 4, 2);
+		CHECK( v.find_index(is_under(2)));
+		CHECK(*v.find_index(is_under(2)) == 2);
+		CHECK_FALSE(v.find_index(is_under(-1)));
+
+		std::vector<int> eachs{};
+		v.find_index([&](auto it){
+			eachs.push_back(it);
+			return it % 2 == 0;
+		});
+		CHECK((eachs == std::vector<int>{5, 3, 1, 4}));
 	}
 
 	SECTION("inject"){
