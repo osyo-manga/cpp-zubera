@@ -96,7 +96,7 @@ struct enumerable{
 
 	constexpr auto
 	cycle(std::size_t count) const{
-		return to_enum([=](auto self, auto y){
+		return self().to_enum([=](auto self, auto y){
 			return self.cycle(count, y);
 		});
 	}
@@ -134,6 +134,17 @@ struct enumerable{
 		});
 	}
 
+// 	template<typename Pred>
+// 	constexpr auto
+// 	find_index(Pred&& pred) const{
+// 		using opt_t = std::optional<std::size_t>;
+// 		return self().inject().with_index(opt_t{ std::nullopt }, [&](auto result, auto it, auto i) constexpr{
+// 			return result   ? result
+// 				 : pred(it) ? std::make_optional(i)
+// 				 : std::nullopt;
+// 		});
+// 	}
+
 	template<typename Init, typename F>
 	constexpr auto
 	inject(Init init, F f) const{
@@ -142,6 +153,12 @@ struct enumerable{
 			return it;
 		});
 		return init;
+	}
+
+	template<typename F>
+	constexpr auto
+	inject(F f) const{
+		return self().inject(value_t{}, std::forward<F>(f));
 	}
 
 	template<typename F>
@@ -155,7 +172,7 @@ struct enumerable{
 
 	constexpr auto
 	map() const{
-		return to_enum([](auto self, auto y) constexpr{ return self.map(y); });
+		return self().to_enum([](auto self, auto y) constexpr{ return self.map(y); });
 	}
 
 	template<typename Pred>
@@ -168,7 +185,7 @@ struct enumerable{
 
 	constexpr auto
 	select() const{
-		return to_enum([](auto self, auto y) constexpr{ return self.select(y); });
+		return self().to_enum([](auto self, auto y) constexpr{ return self.select(y); });
 	}
 
 	constexpr auto
@@ -251,7 +268,7 @@ std::ostream&
 operator <<(std::ostream& os, enumerable<Derived, T, Result> const& e){
 	auto last_index = e.count() - 1;
 	os << "[";
-	e.each_with_index([&](auto it, auto i){
+	e.each_with_index([&](auto it, std::size_t i){
 		os << it << (i == last_index ? "" : ", ");
 	});
 	os << "]";

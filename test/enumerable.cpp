@@ -120,7 +120,8 @@ test_enumerable_functions(Maker make){
 		auto value = 42;
 		CHECK((make(1, 2, 3).inject(value, plus) == 48));
 		CHECK(value == 42);
-
+		
+		CHECK(make(1, 2, 3).inject(plus) == 6);
 	}
 
 	SECTION("map"){
