@@ -43,6 +43,6 @@ TEST_CASE("zubera::enumerator", "[zubera][enumerator]"){
 		range0_5.with_object("homu"s, [&](auto, auto obj){
 			result.push_back(obj);
 		});
-		CHECK((result == zubera::vector{"homu"s, "homu"s, "homu"s, "homu"s, "homu"s}));
+		CHECK((result == zubera::vector{"homu"s}.cycle(5).to_a()));
 	}
 }
