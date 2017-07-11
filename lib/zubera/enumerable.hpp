@@ -125,7 +125,14 @@ struct enumerable{
 	constexpr auto
 	each_cons(std::size_t num, F&& f) const{
 		auto count = self().count();
-		return self().each_with_index([&](auto, auto i){
+		if( count < num ){
+			return;
+		}
+		if( count == num ){
+			f(self().take(num));
+			return;
+		}
+		self().each_with_index([&](auto, auto i){
 			if( count < i * num ){
 				return;
 			}
@@ -193,15 +200,7 @@ struct enumerable{
 	template<typename F>
 	constexpr auto
 	map(F&& f) const{
-// 		using result_t = Result<decltype(f(*self().first()))>;
 		using result_t = Result<decltype(f(std::declval<value_t>()))>;
-// 		result_t result;
-// 		self().each([&](auto it){
-// 			std::cout << it << std::endl;
-// // 			result = result.push(it);
-// 		});
-// 		return result;
-// 		return result_t{};
 		return self().inject(result_t{}, [&f](auto result, auto it) constexpr{
 			return result.push(f(it));
 		});

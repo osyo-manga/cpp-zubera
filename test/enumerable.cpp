@@ -108,6 +108,8 @@ test_enumerable_functions(Maker make){
 		CHECK((result == result_t{ {1, 2}, {2, 3}, {3, 4} }));
 
 		CHECK((v.each_cons(3).to_a() == make(make(1, 2, 3), make(2, 3, 4))));
+		CHECK((make(1, 2, 3).each_cons(100).is_empty()));
+		CHECK(make(1, 2, 3).each_cons(3).count() == 1);
 	}
 
 	SECTION("each_with_index"){
