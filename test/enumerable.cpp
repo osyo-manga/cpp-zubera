@@ -140,6 +140,14 @@ test_enumerable_functions(Maker make){
 	}
 
 	SECTION("each_with_object"){
+		using vec_t = std::vector<int>;
+		vec_t result_values;
+
+		make(5, 4, 3, 2, 1).each_with_object(5).with_index([&](auto, auto obj, auto i){
+			result_values.push_back(obj + i);
+		});
+		CHECK((result_values  == vec_t{5, 6, 7, 8, 9}));
+
 		auto v = make(1, 2, 3, 4);
 		auto value = 5;
 		auto sum = v.each_with_object(value, [](auto it, auto& obj){

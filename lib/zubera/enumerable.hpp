@@ -184,6 +184,12 @@ struct enumerable{
 		return obj;
 	}
 
+	template<typename Obj>
+	constexpr auto
+	each_with_object(Obj&& obj){
+		return to_enum([=](auto self, auto y){ return self.each_with_object(obj, y); });
+	}
+
 	constexpr auto
 	entries() const{
 		return self().to_a();
