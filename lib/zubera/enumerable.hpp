@@ -201,6 +201,24 @@ struct enumerable{
 		});
 	}
 
+	constexpr auto
+	find() const{
+		return self().to_enum([](auto self, auto y) constexpr{ return self.find(y); });
+	}
+
+	template<typename Pred>
+	constexpr auto
+	find_all(Pred&& pred) const{
+		return self().inject(array_t{}, [&pred](auto sum, auto it) constexpr{
+			return pred(it) ? sum.push(it) : sum;
+		});
+	}
+
+	constexpr auto
+	find_all() const{
+		return self().to_enum([](auto self, auto y) constexpr{ return self.find_all(y); });
+	}
+
 	template<typename Pred>
 	constexpr auto
 	find_index(Pred&& pred) const{
@@ -246,14 +264,12 @@ struct enumerable{
 	template<typename Pred>
 	constexpr auto
 	select(Pred&& pred) const{
-		return self().inject(array_t{}, [&pred](auto sum, auto it) constexpr{
-			return pred(it) ? sum.push(it) : sum;
-		});
+		return self().find_all(std::forward<Pred>(pred));
 	}
 
 	constexpr auto
 	select() const{
-		return self().to_enum([](auto self, auto y) constexpr{ return self.select(y); });
+		return self().find_all();
 	}
 
 	constexpr auto

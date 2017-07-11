@@ -165,6 +165,10 @@ test_enumerable_functions(Maker make){
 			return it % 2 == 0;
 		});
 		CHECK((eachs == std::vector<int>{5, 3, 1, 4}));
+
+		CHECK(*make(5, 6, 7, 8, 9).find().with_index([](auto, auto i){
+			return i == 3;
+		}) == 8);
 	}
 
 	SECTION("find_index"){
