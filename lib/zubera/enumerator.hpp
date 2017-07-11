@@ -61,8 +61,8 @@ struct enumerator : zubera::enumerable<enumerator<T, Eacher>, T>{
 	template<typename Init, typename F>
 	constexpr auto
 	with_index(Init init, F&& f) const{
-		return eacher(make_yielder([&](auto it) constexpr{
-			return f(it, init++);
+		return eacher(make_yielder([&](auto&&... args) constexpr{
+			return f(args..., init++);
 		}));
 	}
 
@@ -75,7 +75,7 @@ struct enumerator : zubera::enumerable<enumerator<T, Eacher>, T>{
 	template<typename Obj, typename F>
 	constexpr auto
 	with_object(Obj&& obj, F&& f) const{
-		eacher(make_yielder([&](auto it) constexpr{
+		eacher(make_yielder([&](auto&& it) constexpr{
 			return f(it, obj);
 		}));
 		return obj;
