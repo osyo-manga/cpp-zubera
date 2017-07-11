@@ -98,6 +98,18 @@ test_enumerable_functions(Maker make){
 		CHECK((each_result == vec_t{1, 2, 3, 4, 5}));
 	}
 
+	SECTION("each_cons"){
+		using result_t = std::vector<std::vector<int>>;
+		auto v = make(1, 2, 3, 4);
+		result_t result{};
+		v.each_cons(2, [&](auto it){
+			result.push_back(it);
+		});
+		CHECK((result == result_t{ {1, 2}, {2, 3}, {3, 4} }));
+
+		CHECK((v.each_cons(3).to_a() == make(make(1, 2, 3), make(2, 3, 4))));
+	}
+
 	SECTION("each_with_index"){
 		using vec_t = std::vector<int>;
 		vec_t result_indices;
