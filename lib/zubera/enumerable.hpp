@@ -184,6 +184,11 @@ struct enumerable{
 		return obj;
 	}
 
+	constexpr auto
+	entries() const{
+		return self().to_a();
+	}
+
 	template<typename Pred>
 	constexpr auto
 	find(Pred&& pred) const{
