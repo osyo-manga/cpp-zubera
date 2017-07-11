@@ -46,5 +46,12 @@ TEST_CASE("zubera::enumerator", "[zubera][enumerator]"){
 			result.push_back(obj);
 		});
 		CHECK((result == zubera::vector{"homu"s}.cycle(5).to_a()));
+
+		auto value = 5;
+		auto sum = range0_5.with_object(value, [](auto it, auto& obj){
+			obj += it;
+		});
+		CHECK(sum == 15);
+		CHECK(value == 15);
 	}
 }

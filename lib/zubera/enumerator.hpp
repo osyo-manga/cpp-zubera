@@ -75,9 +75,10 @@ struct enumerator : zubera::enumerable<enumerator<T, Eacher>, T>{
 	template<typename Obj, typename F>
 	constexpr auto
 	with_object(Obj&& obj, F&& f) const{
-		return eacher(make_yielder([&](auto it) constexpr{
+		eacher(make_yielder([&](auto it) constexpr{
 			return f(it, obj);
 		}));
+		return obj;
 	}
 private:
 	Eacher eacher;
