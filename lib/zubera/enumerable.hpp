@@ -150,6 +150,25 @@ struct enumerable{
 
 	template<typename F>
 	constexpr auto
+	each_slice(std::size_t num, F&& f) const{
+		if( self().is_empty() ){
+			return;
+		}
+		f(self().take(num));
+		self().drop(num).each_slice(num, f);
+	}
+
+	constexpr auto
+	each_slice(std::size_t num) const{
+		using value_t = decltype(self().take(0));
+		return make_enumerator<value_t>([self = this->self(), num](auto y) constexpr{
+			return self.each_slice(num, y);
+		});
+	}
+
+
+	template<typename F>
+	constexpr auto
 	each_with_index(F f) const{
 		return self().inject(0, [&](auto i, auto it) constexpr{
 			f(it, i);

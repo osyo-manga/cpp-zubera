@@ -112,6 +112,19 @@ test_enumerable_functions(Maker make){
 		CHECK(make(1, 2, 3).each_cons(3).count() == 1);
 	}
 
+	SECTION("each_cons"){
+		using result_t = std::vector<std::vector<int>>;
+		auto v = make(1, 2, 3, 4, 5);
+		result_t result{};
+		v.each_slice(2, [&](auto it){
+			result.push_back(it);
+		});
+		CHECK((result == result_t{ {1, 2}, {3, 4}, {5} }));
+		CHECK((v.each_slice(3).to_a() == make(make(1, 2, 3), make(4, 5))));
+		CHECK(make(1, 2, 3).each_slice(300).count() == 1);
+		CHECK(make(1, 2, 3).each_slice(3).count() == 1);
+	}
+
 	SECTION("each_with_index"){
 		using vec_t = std::vector<int>;
 		vec_t result_indices;
