@@ -166,7 +166,6 @@ struct enumerable{
 		});
 	}
 
-
 	template<typename F>
 	constexpr auto
 	each_with_index(F f) const{
@@ -174,6 +173,15 @@ struct enumerable{
 			f(it, i);
 			return ++i;
 		});
+	}
+
+	template<typename Obj, typename F>
+	constexpr auto
+	each_with_object(Obj&& obj, F&& f){
+		self().each([&](auto it){
+			f(it, obj);
+		});
+		return obj;
 	}
 
 	template<typename Pred>

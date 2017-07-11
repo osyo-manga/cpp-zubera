@@ -139,6 +139,16 @@ test_enumerable_functions(Maker make){
 		CHECK((result_values  == vec_t{5, 4, 3, 2, 1}));
 	}
 
+	SECTION("each_with_object"){
+		auto v = make(1, 2, 3, 4);
+		auto value = 5;
+		auto sum = v.each_with_object(value, [](auto it, auto& obj){
+			obj += it;
+		});
+		CHECK(sum == 15);
+		CHECK(value == 15);
+	}
+
 	SECTION("find"){
 		auto v = make(5, 3, 1, 4, 2);
 		CHECK( v.find(is_over(3)));
