@@ -3,16 +3,15 @@
 #include <vector>
 
 
-template<typename Maker>
+template<typename Maker, typename Range>
 void
-test_enumerable_functions(Maker make){
+test_enumerable_functions(Maker make, Range range1_5){
 	using namespace test;
 	using namespace std::literals::string_literals;
 	auto to_string = [](auto it){ return std::to_string(it); };
 
 	SECTION("all_of"){
 		CHECK(make().all_of(is_under(3)));
-		CHECK(make(1, 2, 3).all_of(is_under(3)));
 		CHECK(make(false, false, false).all_of([](auto...){ return true; }));
 		CHECK_FALSE(make(1, 2, 3, 4).all_of(is_under(3)));
 
@@ -22,33 +21,37 @@ test_enumerable_functions(Maker make){
 		CHECK(make("test").all_of());
 		CHECK(make("").all_of());
 		CHECK_FALSE(make(false, true).all_of());
+
+		CHECK(range1_5.all_of());
+		CHECK(range1_5.all_of(is_under(5)));
 	}
 
 	SECTION("any_of"){
-		CHECK(make(1, 2, 3).any_of(equal_to(1)));
-		CHECK(make(1, 2, 3).any_of(equal_to(2)));
-		CHECK(make(1, 2, 3).any_of(equal_to(3)));
-		CHECK(make(1, 2, 3).any_of(is_over(0)));
+		CHECK(range1_5.any_of(equal_to(1)));
+		CHECK(range1_5.any_of(equal_to(2)));
+		CHECK(range1_5.any_of(equal_to(3)));
+		CHECK(range1_5.any_of(is_over(0)));
+
 		CHECK_FALSE(make().any_of(equal_to(1)));
 		CHECK_FALSE(make().any_of([](auto...){ return false; }));
-		CHECK_FALSE(make(1, 2, 3).any_of(equal_to(4)));
+		CHECK_FALSE(range1_5.any_of(equal_to(6)));
 
-		CHECK(make(1, 2, 3).any_of());
-		CHECK(make(1, false, 3).any_of());
+		CHECK(range1_5.any_of());
+		CHECK(make(1, 0, 3).any_of());
 		CHECK_FALSE(make().any_of());
 		CHECK_FALSE(make(false, false, false).any_of());
 	}
 
 	SECTION("collect"){
-		CHECK(make(1, 2, 3).collect(twice) == make(2, 4, 6));
-		CHECK(make(1, 2, 3).collect(to_string) == make("1"s, "2"s, "3"s));
+		CHECK(range1_5.collect(twice) == make(2, 4, 6, 8, 10));
+		CHECK(range1_5.collect(to_string) == make("1"s, "2"s, "3"s, "4"s, "5"s));
 	}
 
 	SECTION("count"){
 		CHECK(make().count() == 0);
 
-		CHECK(make(1, 2, 3).count() == 3);
-		CHECK(make(1, 2, 3, 4, 5).count_if(is_over(3)) == 3);
+		CHECK(range1_5.count() == 5);
+		CHECK(range1_5.count_if(is_over(3)) == 3);
 		CHECK(make(1, 1, 2, 2, 2, 3).count_if(is_equal(2)) == 3);
 		CHECK(make(1, 1, 2, 2, 2, 3).count(2) == 3);
 		CHECK(make("homu", "homu", "mami").count("homu"s) == 2);
@@ -56,10 +59,10 @@ test_enumerable_functions(Maker make){
 
 	SECTION("cycle"){
 		std::vector<int> result;
-		make(1, 2, 3).cycle(3, [&result](auto it){
+		range1_5.cycle(3, [&result](auto it){
 			result.push_back(it);
 		});
-		CHECK((result == std::vector<int>{1, 2, 3, 1, 2, 3, 1, 2, 3}));
+		CHECK((result == std::vector<int>{1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5}));
 
 		CHECK(make(1, 2).cycle(3) == make(1, 2, 1, 2, 1, 2));
 		CHECK(make(1, 2).cycle(0) == make());
@@ -75,10 +78,9 @@ test_enumerable_functions(Maker make){
 	}
 
 	SECTION("drop"){
-		auto v = make(1, 2, 3, 4, 5);
-		CHECK(v.drop(0) == make(1, 2, 3, 4, 5));
-		CHECK(v.drop(3) == make(4, 5));
-		CHECK(v.drop(10) == make());
+		CHECK(range1_5.drop(0) == make(1, 2, 3, 4, 5));
+		CHECK(range1_5.drop(3) == make(4, 5));
+		CHECK(range1_5.drop(10) == make());
 	}
 
 	SECTION("drop_while"){
@@ -92,7 +94,7 @@ test_enumerable_functions(Maker make){
 	SECTION("each"){
 		using vec_t = std::vector<int>;
 		vec_t each_result;
-		make(1, 2, 3, 4, 5).each([&](auto n){
+		range1_5.each([&](auto n){
 			each_result.push_back(n);
 		});
 		CHECK((each_result == vec_t{1, 2, 3, 4, 5}));
@@ -100,27 +102,27 @@ test_enumerable_functions(Maker make){
 
 	SECTION("each_cons"){
 		using result_t = std::vector<std::vector<int>>;
-		auto v = make(1, 2, 3, 4);
 		result_t result{};
-		v.each_cons(2, [&](auto it){
+		range1_5.each_cons(2, [&](auto it){
 			result.push_back(it);
 		});
-		CHECK((result == result_t{ {1, 2}, {2, 3}, {3, 4} }));
+		CHECK((result == result_t{ {1, 2}, {2, 3}, {3, 4}, {4, 5} }));
 
-		CHECK((v.each_cons(3).to_a() == make(make(1, 2, 3), make(2, 3, 4))));
+		CHECK((make(1, 2, 3).each_cons(1) == make( make(1), make(2), make(3) )));
+		CHECK((make(1, 2, 3, 4).each_cons(2) == make( make(1, 2), make(2, 3), make(3, 4) )));
+		CHECK((make(1, 2, 3, 4).each_cons(3) == make(make(1, 2, 3), make(2, 3, 4))));
 		CHECK((make(1, 2, 3).each_cons(100).is_empty()));
 		CHECK(make(1, 2, 3).each_cons(3).count() == 1);
 	}
 
-	SECTION("each_cons"){
+	SECTION("each_slice"){
 		using result_t = std::vector<std::vector<int>>;
-		auto v = make(1, 2, 3, 4, 5);
 		result_t result{};
-		v.each_slice(2, [&](auto it){
+		range1_5.each_slice(2, [&](auto it){
 			result.push_back(it);
 		});
 		CHECK((result == result_t{ {1, 2}, {3, 4}, {5} }));
-		CHECK((v.each_slice(3).to_a() == make(make(1, 2, 3), make(4, 5))));
+		CHECK((range1_5.each_slice(3).to_a() == make(make(1, 2, 3), make(4, 5))));
 		CHECK(make(1, 2, 3).each_slice(300).count() == 1);
 		CHECK(make(1, 2, 3).each_slice(3).count() == 1);
 	}
@@ -130,31 +132,30 @@ test_enumerable_functions(Maker make){
 		vec_t result_indices;
 		vec_t result_values;
 
-		make(5, 4, 3, 2, 1).each_with_index([&](auto it, auto i){
+		range1_5.each_with_index([&](auto it, auto i){
 			result_indices.push_back(i);
 			result_values.push_back(it);
 		});
 
 		CHECK((result_indices == vec_t{0, 1, 2, 3, 4}));
-		CHECK((result_values  == vec_t{5, 4, 3, 2, 1}));
+		CHECK((result_values  == vec_t{1, 2, 3, 4, 5}));
 	}
 
 	SECTION("each_with_object"){
 		using vec_t = std::vector<int>;
 		vec_t result_values;
 
-		make(5, 4, 3, 2, 1).each_with_object(5).with_index([&](auto, auto obj, auto i){
+		range1_5.each_with_object(5).with_index([&](auto, auto obj, auto i){
 			result_values.push_back(obj + i);
 		});
 		CHECK((result_values  == vec_t{5, 6, 7, 8, 9}));
 
-		auto v = make(1, 2, 3, 4);
 		auto value = 5;
-		auto sum = v.each_with_object(value, [](auto it, auto& obj){
+		auto sum = range1_5.each_with_object(value, [](auto it, auto& obj){
 			obj += it;
 		});
-		CHECK(sum == 15);
-		CHECK(value == 15);
+		CHECK(sum == 20);
+		CHECK(value == 20);
 	}
 
 	SECTION("find"){
@@ -198,23 +199,23 @@ test_enumerable_functions(Maker make){
 		CHECK(*make(4, 2, 2).first() == 4);
 		CHECK_FALSE(make().first());
 
-		CHECK(make(1, 2, 3, 4, 5).first(3) == make(1, 2, 3));
+		CHECK(range1_5.first(3) == make(1, 2, 3));
 		CHECK(make().first(3).is_empty());
 	}
 
 	SECTION("inject"){
-		CHECK((make(1, 2, 3).inject(0, plus) == 6));
+		CHECK((range1_5.inject(0, plus) == 15));
 		CHECK((make('m', 'a', 'd', 'o').inject("homu"s, plus) == "homumado"));
 
-		auto value = 42;
-		CHECK((make(1, 2, 3).inject(value, plus) == 48));
-		CHECK(value == 42);
+		auto value = 5;
+		CHECK((range1_5.inject(value, plus) == 20));
+		CHECK(value == 5);
 		
-		CHECK(make(1, 2, 3).inject(plus) == 6);
+		CHECK(range1_5.inject(plus) == 15);
 	}
 
 	SECTION("map"){
-		CHECK(make(1, 2, 3).map(twice) == make(2, 4, 6));
+		CHECK(range1_5.map(twice) == make(2, 4, 6, 8, 10));
 		CHECK(make(1, 2, 3).map(to_string) == make("1"s, "2"s, "3"s));
 		CHECK(make(1, 2, 3, 4).map().select(is_even) == make(2, 4));
 
@@ -234,9 +235,8 @@ test_enumerable_functions(Maker make){
 	}
 
 	SECTION("take"){
-		auto v = make(1, 2, 3, 4, 5);
-		CHECK(v.take(3) == make(1, 2, 3));
-		CHECK(v.take(10) == make(1, 2, 3, 4, 5));
+		CHECK(range1_5.take(3) == make(1, 2, 3));
+		CHECK(range1_5.take(10) == make(1, 2, 3, 4, 5));
 	}
 
 	SECTION("take_while"){
@@ -248,8 +248,8 @@ test_enumerable_functions(Maker make){
 	}
 
 	SECTION("concat"){
-		CHECK(make(1, 2).concat(make(3, 4)) == make(1, 2, 3, 4));
-		CHECK(make(1, 2).concat(make()) == make(1, 2));
+		CHECK(range1_5.concat(make(3, 4)) == make(1, 2, 3, 4, 5, 3, 4));
+		CHECK(range1_5.concat(make()) == make(1, 2, 3, 4, 5));
 
 		// zubera::tuple is not supported.
 // 		CHECK(make().concat(make(3, 4)) == make(3, 4));
@@ -268,7 +268,9 @@ TEST_CASE("zubera::enumerable", "[zubera][enumerable]"){
 	};
 	auto make_tuple = [](auto... xs){ return zubera::tuple{xs...}; };
 
-	test_enumerable_functions(make_x);
-	test_enumerable_functions(make_vector);
-	test_enumerable_functions(make_tuple);
+	test_enumerable_functions(make_x, make_x(1, 2, 3, 4, 5));
+	test_enumerable_functions(make_vector, make_vector(1, 2, 3, 4, 5));
+	test_enumerable_functions(make_tuple, make_tuple(1, 2, 3, 4, 5));
+
+// 	test_enumerable_function(make_vector, zubera::irange(1, 6));
 }

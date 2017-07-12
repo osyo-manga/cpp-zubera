@@ -133,7 +133,7 @@ struct enumerable{
 			return;
 		}
 		self().each_with_index([&](auto, auto i){
-			if( count < i * num ){
+			if( count - i < num ){
 				return;
 			}
 			f(self().drop(i).take(num));
