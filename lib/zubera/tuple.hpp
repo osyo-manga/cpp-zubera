@@ -122,4 +122,21 @@ tuple(Args&&... args) -> tuple<tuple_detail::special_decay_t<Args>...>;
 
 }  // namespace zubera
 
+
+namespace std{
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmismatched-tags"
+template<typename... Args>
+class tuple_size<zubera::tuple<Args...>> : public tuple_size<std::tuple<Args...>>{};
+
+template<std::size_t N, typename... Args>
+class tuple_element<N, zubera::tuple<Args...>> : public tuple_element<N, std::tuple<Args...>>{};
+#pragma clang diagnostic pop
+
+}  // namespace std
+
+
+
+
 #endif /* ZUBERA_TUPLE */
