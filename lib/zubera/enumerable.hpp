@@ -280,6 +280,12 @@ struct enumerable{
 	}
 
 	template<typename Pred>
+	constexpr bool
+	none_of(Pred&& pred) const{
+		return self().count_if(std::forward<Pred>(pred)) == 0;
+	}
+
+	template<typename Pred>
 	constexpr auto
 	select(Pred&& pred) const{
 		return self().find_all(std::forward<Pred>(pred));

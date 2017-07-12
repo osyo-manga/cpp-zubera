@@ -223,6 +223,12 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK((map.to_a() == make(1, 2, 3)));
 	}
 
+	SECTION("none_of"){
+		CHECK(range1_5.none_of(equal_to(0)));
+		CHECK_FALSE(range1_5.none_of(equal_to(1)));
+		CHECK_FALSE(range1_5.none_of(is_even));
+	}
+
 	SECTION("select"){
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_even) == make(2, 4, 6));
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_odd)  == make(1, 3, 5));
