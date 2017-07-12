@@ -2,6 +2,7 @@
 #define ZUBERA_ENUMERABLE_H
 
 #include <iostream>
+#include <functional>
 #include <optional>
 
 namespace zubera{
@@ -117,7 +118,7 @@ struct enumerable{
 	template<typename Pred>
 	constexpr auto
 	drop_while(Pred&& pred) const{
-		auto index = self().find_index([&](auto it){ return !pred(it); });
+		auto index = self().find_index(std::not_fn(std::forward<Pred>(pred)));
 		return self().drop(index ? *index : self().count());
 	}
 
@@ -341,7 +342,7 @@ struct enumerable{
 	template<typename Pred>
 	constexpr auto
 	take_while(Pred&& pred) const{
-		auto index = self().find_index([&](auto it){ return !pred(it); });
+		auto index = self().find_index(std::not_fn(std::forward<Pred>(pred)));
 		return self().take(index ? *index : self().count());
 	}
 
