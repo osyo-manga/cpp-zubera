@@ -373,6 +373,12 @@ struct enumerable{
 		});
 	}
 
+	template<typename D, typename V, template<class> class R>
+	constexpr auto
+	operator +(enumerable<D, V, R> const& enum_) const{
+		return self().concat(enum_);
+	}
+
 	template<typename T, typename F>
 	constexpr bool
 	equal(T&& rhs, F f) const{
