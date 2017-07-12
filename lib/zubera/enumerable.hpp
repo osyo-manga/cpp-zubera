@@ -291,6 +291,18 @@ struct enumerable{
 	}
 
 	template<typename Pred>
+	constexpr bool
+	one_of(Pred&& pred) const{
+		return self().count_if(std::forward<Pred>(pred)) == 1;
+	}
+
+	constexpr bool
+	one_of() const{
+		return self().one_of([](auto it) constexpr{ return it; });
+	}
+
+
+	template<typename Pred>
 	constexpr auto
 	select(Pred&& pred) const{
 		return self().find_all(std::forward<Pred>(pred));

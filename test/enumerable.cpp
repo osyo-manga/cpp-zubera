@@ -235,6 +235,16 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK_FALSE(make(1, 0).none_of());
 	}
 
+	SECTION("one_of"){
+		CHECK(range1_5.one_of(equal_to(1)));
+		CHECK_FALSE(range1_5.one_of(equal_to(0)));
+		CHECK_FALSE(range1_5.one_of(is_even));
+
+		CHECK(make(1, 0, 0).one_of());
+		CHECK_FALSE(make(1, 1, 0).one_of());
+		CHECK_FALSE(make().one_of());
+	}
+
 	SECTION("select"){
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_even) == make(2, 4, 6));
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_odd)  == make(1, 3, 5));
