@@ -227,6 +227,12 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(range1_5.none_of(equal_to(0)));
 		CHECK_FALSE(range1_5.none_of(equal_to(1)));
 		CHECK_FALSE(range1_5.none_of(is_even));
+
+		CHECK(make().none_of());
+		CHECK(make(0, 0, 0).none_of());
+		CHECK(make(0, false, 0).none_of());
+		CHECK_FALSE(range1_5.none_of());
+		CHECK_FALSE(make(1, 0).none_of());
 	}
 
 	SECTION("select"){

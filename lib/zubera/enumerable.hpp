@@ -285,6 +285,11 @@ struct enumerable{
 		return self().count_if(std::forward<Pred>(pred)) == 0;
 	}
 
+	constexpr bool
+	none_of() const{
+		return self().none_of([](auto it) constexpr{ return it; });
+	}
+
 	template<typename Pred>
 	constexpr auto
 	select(Pred&& pred) const{
