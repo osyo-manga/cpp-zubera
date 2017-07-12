@@ -9,7 +9,7 @@ TEST_CASE("zubera::enumerator", "[zubera][enumerator]"){
 
 	auto range0_5 = zubera::make_enumerator<int>([](auto y){
 		for(int i = 0 ; i < 5 ; ++i){
-			y.yield(i + i);
+			y.yield(i);
 		}
 	});
 
