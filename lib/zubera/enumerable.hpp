@@ -265,6 +265,19 @@ struct enumerable{
 		return self().inject(value_t{}, std::forward<F>(f));
 	}
 
+	template<typename Comp>
+	constexpr auto
+	max(Comp&& comp) const{
+		return self().inject(self().first(), [&](auto max, auto it) constexpr{
+			return comp(max, it) >= 1 ? it : max;
+		});
+	}
+
+	constexpr auto
+	max() const{
+		return self().max([](auto a, auto b){ return a < b; });
+	}
+
 	template<typename F>
 	constexpr auto
 	map(F&& f) const{
@@ -301,6 +314,11 @@ struct enumerable{
 		return self().one_of([](auto it) constexpr{ return it; });
 	}
 
+	template<typename... Args>
+	constexpr auto
+	reduce(Args&&... args){
+		return self().inject(std::forward<Args>(args)...);
+	}
 
 	template<typename Pred>
 	constexpr auto

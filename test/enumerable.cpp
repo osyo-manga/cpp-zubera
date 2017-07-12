@@ -223,6 +223,13 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK((map.to_a() == make(1, 2, 3)));
 	}
 
+	SECTION("max"){
+		CHECK(range1_5.max());
+		CHECK(*range1_5.max() == 5);
+		CHECK(*range1_5.max([](auto a, auto b){ return a < b ? -1 : 1; }) == 1);
+		CHECK_FALSE(make().max());
+	}
+
 	SECTION("none_of"){
 		CHECK(range1_5.none_of(equal_to(0)));
 		CHECK_FALSE(range1_5.none_of(equal_to(1)));
