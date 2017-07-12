@@ -193,6 +193,15 @@ test_enumerable_functions(Maker make){
 		CHECK((eachs == std::vector<int>{5, 3, 1, 4}));
 	}
 
+	SECTION("first"){
+		CHECK( make(4, 2, 2).first());
+		CHECK(*make(4, 2, 2).first() == 4);
+		CHECK_FALSE(make().first());
+
+		CHECK(make(1, 2, 3, 4, 5).first(3) == make(1, 2, 3));
+		CHECK(make().first(3).is_empty());
+	}
+
 	SECTION("inject"){
 		CHECK((make(1, 2, 3).inject(0, plus) == 6));
 		CHECK((make('m', 'a', 'd', 'o').inject("homu"s, plus) == "homumado"));

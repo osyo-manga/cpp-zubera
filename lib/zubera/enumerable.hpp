@@ -237,6 +237,18 @@ struct enumerable{
 		return result == -1 ? std::nullopt : std::make_optional(std::size_t(result));
 	}
 
+	constexpr auto
+	first() const{
+		return self().find().with_index([](auto, auto i){
+			return i == 0;
+		});
+	}
+
+	constexpr auto
+	first(std::size_t n) const{
+		return self().take(n);
+	}
+
 	template<typename Init, typename F>
 	constexpr auto
 	inject(Init init, F f) const{
