@@ -110,7 +110,7 @@ struct enumerable{
 
 	constexpr auto
 	drop(std::size_t n) const{
-		return self().select().with_index([&](auto, std::size_t i) constexpr{
+		return self().find_all().with_index([&](auto, std::size_t i) constexpr{
 			return i >= n;
 		});
 	}
@@ -323,18 +323,24 @@ struct enumerable{
 
 	template<typename Pred>
 	constexpr auto
-	select(Pred&& pred) const{
-		return self().find_all(std::forward<Pred>(pred));
+	reject(Pred&& pred) const{
+		return self().find_all(std::not_fn(std::forward<Pred>(pred)));
 	}
 
 	constexpr auto
-	select() const{
-		return self().find_all();
+	reject() const{
+		return self().to_enum([](auto self, auto y){ return self.reject(y); });
+	}
+
+	template<typename... Args>
+	constexpr auto
+	select(Args&&... args) const{
+		return self().find_all(std::forward<Args>(args)...);
 	}
 
 	constexpr auto
 	take(std::size_t n) const{
-		return self().select().with_index([&](auto, std::size_t i) constexpr{
+		return self().find_all().with_index([&](auto, std::size_t i) constexpr{
 			return i < n;
 		});
 	}
@@ -348,7 +354,7 @@ struct enumerable{
 
 	constexpr auto
 	to_a() const{
-		return self().select([](auto) constexpr{ return true; });
+		return self().find_all([](auto) constexpr{ return true; });
 	}
 
 
