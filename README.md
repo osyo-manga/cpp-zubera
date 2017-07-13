@@ -26,6 +26,7 @@
 - max : 最大値を返す。(result: std::optional)
 - none_of : すべて○○でないかを調べる。
 - one_of : 1つだけ○○かを調べる。
+- partition : 要素を2つの配列に分ける。
 - select : 条件に合う要素を集める。
 - take : 先頭から要素をいくつか取り出す。
 - take_while : ブロックが真を返す要素を先頭から取り出す。
