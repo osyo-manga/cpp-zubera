@@ -23,6 +23,10 @@ template<typename T>
 struct vector;
 
 
+template<typename... Args>
+struct tuple;
+
+
 template<
 	typename Derived, typename Value, template<class> class Result = vector
 >
@@ -313,6 +317,25 @@ struct enumerable{
 	constexpr bool
 	one_of() const{
 		return self().one_of([](auto it) constexpr{ return it; });
+	}
+
+	template<typename Pred>
+	constexpr auto
+	partition(Pred&& pred) const{
+		return self().inject(zubera::tuple{ array_t{}, array_t{} }, [&](auto memo, auto it){
+			auto&& [left, right] = memo;
+			if( pred(it) ){
+				return zubera::tuple{ left.push(it), right };
+			}
+			else{
+				return zubera::tuple{ left, right.push(it) };
+			}
+		});
+	}
+
+	constexpr auto
+	partition() const{
+		return self().to_enum([](auto self, auto y) constexpr{ return self.partition(y); });
 	}
 
 	template<typename... Args>

@@ -252,6 +252,26 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK_FALSE(make().one_of());
 	}
 
+	SECTION("partition"){
+		int value = 0;
+		auto [even, odd] = range1_5.partition([&](auto it){
+			value++;
+			return it % 2 == 0;
+		});
+		CHECK(even == make(2, 4));
+		CHECK(odd  == make(1, 3, 5));
+		CHECK(value == range1_5.count());
+
+		value = 0;
+		auto [a, b] = range1_5.partition().with_index([&](auto, auto i){
+			value++;
+			return i < 3;
+		});
+		CHECK(a == make(1, 2, 3));
+		CHECK(b == make(4, 5));
+		CHECK(value == range1_5.count());
+	}
+
 	SECTION("reject"){
 		CHECK(range1_5.reject(is_odd) == make(2, 4));
 		CHECK(make(3, 1, 2, 5).reject().with_index([](auto, auto i){ return is_odd(i); }) == make(3, 2));
