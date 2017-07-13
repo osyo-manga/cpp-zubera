@@ -361,6 +361,22 @@ struct enumerable{
 		return self().find_all(std::forward<Args>(args)...);
 	}
 
+	template<typename Comp>
+	constexpr auto
+	sort(Comp&& comp) const{
+		if( self().is_empty() ){
+			return self().to_a();
+		}
+		auto first = *self().first();
+		auto [left, right] = self().drop(1).partition([&](auto it) constexpr{ return comp(first, it) >= 1; });
+		return left.sort(comp) + array_t{first} + right.sort(comp);
+	}
+
+	constexpr auto
+	sort() const{
+		return sort([](auto a, auto b) constexpr{ return a > b; });
+	}
+
 	constexpr auto
 	take(std::size_t n) const{
 		return self().find_all().with_index([&](auto, std::size_t i) constexpr{
