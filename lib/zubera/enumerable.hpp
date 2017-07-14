@@ -270,17 +270,30 @@ struct enumerable{
 		return self().inject(value_t{}, std::forward<F>(f));
 	}
 
-	template<typename Comp>
+	template<typename Comp,
+		std::enable_if_t<!std::is_integral_v<std::decay_t<Comp>>, std::nullptr_t> = nullptr
+	>
 	constexpr auto
 	max(Comp&& comp) const{
 		return self().inject(self().first(), [&](auto max, auto it) constexpr{
-			return comp(max, it) >= 1 ? it : max;
+			return comp(max, it) > 0 ? max : it;
 		});
+	}
+
+	template<typename Comp>
+	constexpr auto
+	max(std::size_t n, Comp&& comp){
+		return self().sort(comp).reverse_each().take(n);
+	}
+
+	constexpr auto
+	max(std::size_t n) const{
+		return self().sort().reverse_each().take(n);
 	}
 
 	constexpr auto
 	max() const{
-		return self().max([](auto a, auto b){ return a < b; });
+		return self().max([](auto a, auto b){ return a > b; });
 	}
 
 	template<typename F>

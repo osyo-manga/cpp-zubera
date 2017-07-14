@@ -224,10 +224,20 @@ test_enumerable_functions(Maker make, Range range1_5){
 	}
 
 	SECTION("max"){
+		auto rand = make(3, 2, 5, 1, 4, 4);
+
 		CHECK(range1_5.max());
 		CHECK(*range1_5.max() == 5);
-		CHECK(*range1_5.max([](auto a, auto b){ return a < b ? -1 : 1; }) == 1);
+		CHECK(*range1_5.max([](auto a, auto b){ return a > b ? -1 : 1; }) == 1);
+		CHECK(*rand.max() == 5);
 		CHECK_FALSE(make().max());
+
+		CHECK(rand.max(2) == make(5, 4));
+		CHECK(rand.max(3) == make(5, 4, 4));
+		CHECK(rand.max(0) == make());
+		CHECK(rand.max(10) == make(5, 4, 4, 3, 2, 1));
+		CHECK(rand.max(-1) == make(5, 4, 4, 3, 2, 1));
+		CHECK(rand.max(3, [](auto a, auto b){ return a > b ? -1 : 1; }) == make(1, 2, 3));
 	}
 
 	SECTION("none_of"){
