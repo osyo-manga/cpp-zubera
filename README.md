@@ -3,7 +3,7 @@
 # zubera is Ruby like enumerable C++ library
 
 ## Implemented
-(result: std::optional)
+
 - all_of : すべて○○かを調べる。
 - any_of : どれか○○かを調べる。
 - collect : ブロックが返す値を集める。
