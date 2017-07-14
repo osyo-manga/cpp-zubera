@@ -355,6 +355,22 @@ struct enumerable{
 		return self().to_enum([](auto self, auto y){ return self.reject(y); });
 	}
 
+	template<typename F>
+	constexpr auto
+	reverse_each(F&& f) const{
+		if( self().is_empty() ){
+			return *this;
+		}
+		self().drop(1).reverse_each(f);
+		f(*self().first());
+		return *this;
+	}
+
+	constexpr auto
+	reverse_each() const{
+		return self().to_enum([](auto self, auto y){ return self.reverse_each(y); });
+	}
+
 	template<typename... Args>
 	constexpr auto
 	select(Args&&... args) const{

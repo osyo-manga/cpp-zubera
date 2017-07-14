@@ -277,6 +277,24 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(make(3, 1, 2, 5).reject().with_index([](auto, auto i){ return is_odd(i); }) == make(3, 2));
 	}
 
+	SECTION("reverse_each"){
+		using vec_t = std::vector<int>;
+		vec_t result{};
+		range1_5.reverse_each([&result](auto it){
+			result.push_back(it);
+		});
+		CHECK((result == vec_t{5, 4, 3, 2, 1}));
+		
+		result.clear();
+		vec_t indices;
+		range1_5.reverse_each().with_index([&](auto it, auto i){
+			result.push_back(it);
+			indices.push_back(i);
+		});
+		CHECK((result  == vec_t{5, 4, 3, 2, 1}));
+		CHECK((indices == vec_t{0, 1, 2, 3, 4}));
+	}
+
 	SECTION("select"){
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_even) == make(2, 4, 6));
 		CHECK(make(1, 2, 3, 4, 5, 6).select(is_odd)  == make(1, 3, 5));
