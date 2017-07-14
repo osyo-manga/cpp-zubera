@@ -16,8 +16,6 @@ sort(T&& t){
 
 int
 main(){
-	using namespace std::literals::string_literals;
-
 	auto v = zubera::vector{ 3, 1, 5, 4, 9, 7, 8, 2, 4, 1, -3, 2 };
 
 	std::cout << sort(v) << std::endl;
