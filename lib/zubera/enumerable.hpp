@@ -365,7 +365,7 @@ struct enumerable{
 
 	constexpr auto
 	reject() const{
-		return self().to_enum([](auto self, auto y){ return self.reject(y); });
+		return self().to_enum([](auto self, auto y) constexpr{ return self.reject(y); });
 	}
 
 	template<typename F>
@@ -381,7 +381,7 @@ struct enumerable{
 
 	constexpr auto
 	reverse_each() const{
-		return self().to_enum([](auto self, auto y){ return self.reverse_each(y); });
+		return self().to_enum([](auto self, auto y) constexpr{ return self.reverse_each(y); });
 	}
 
 	template<typename... Args>
@@ -398,14 +398,31 @@ struct enumerable{
 		}
 		auto first = *self().first();
 		auto [left, right] = self().drop(1).partition([&](auto it) constexpr{ return comp(first, it) >= 1; });
-		return left.sort(comp) + array_t{first} + right.sort(comp);
+		return left.sort(comp) + array_t{}.push(first) + right.sort(comp);
 	}
 
 	constexpr auto
 	sort() const{
-		return sort([](auto a, auto b) constexpr{ return a > b; });
+		return self().sort([](auto a, auto b) constexpr{ return a > b; });
 	}
 
+	template<typename F>
+	constexpr auto
+	sort_by(F&& f) const{
+		return self().map([&](auto it) constexpr{
+			return std::make_pair(f(it), it);
+		}).sort([](auto a, auto b) constexpr{
+			return a.first > b.first;
+		}).map([](auto it) constexpr{
+			return it.second;
+		});
+	}
+
+	constexpr auto
+	sort_by() const{
+		return self().to_enum([](auto self, auto y) constexpr{ return self.sort_by(y); });
+	}
+	
 	constexpr auto
 	take(std::size_t n) const{
 		return self().find_all().with_index([&](auto, std::size_t i) constexpr{

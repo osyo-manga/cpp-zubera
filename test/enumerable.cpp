@@ -320,6 +320,17 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(make(3, 5, 2, 4, 1).sort() == range1_5);
 		CHECK(make(3, 1, 5, 4, 9, 7, 8, 2, 4, 1, -3, 2).sort() == make(-3, 1, 1, 2, 2, 3, 4, 4, 5, 7, 8, 9));
 		CHECK(make(3, 5, 2, 4, 1).sort([](auto a, auto b){ return a < b; }) == make(5, 4, 3, 2, 1));
+
+		auto animals = make("cat"s, "mouse"s, "giraffe"s, "hippopotamus"s);
+		CHECK(animals.sort() == make("cat"s, "giraffe"s, "hippopotamus"s, "mouse"s));
+	}
+
+	SECTION("sort_by"){
+		auto animals = make("giraffe"s, "mouse"s, "hippopotamus"s, "cat"s);
+		CHECK(animals.sort_by([](auto it){ return it.size(); }) == make("cat"s, "mouse"s, "giraffe"s, "hippopotamus"s));
+
+		auto v = make(5, 3, 1, 4, 2);
+		CHECK(v.sort_by().with_index(std::plus{}) == make(1, 3, 5, 2, 4));
 	}
 
 	SECTION("take"){
