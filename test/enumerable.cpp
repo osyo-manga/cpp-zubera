@@ -178,6 +178,13 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(*make(5, 6, 7, 8, 9).find().with_index([](auto, auto i){
 			return i == 3;
 		}) == 8);
+
+		int count = 0;
+		CHECK(v.find([&](auto it){
+			count++;
+			return it == 3;
+		}));
+		CHECK(count == 2);
 	}
 
 	SECTION("find_index"){
@@ -336,8 +343,13 @@ test_enumerable_functions(Maker make, Range range1_5){
 	}
 
 	SECTION("sort_by"){
+		int count = 0;
 		auto animals = make("giraffe"s, "mouse"s, "hippopotamus"s, "cat"s);
-		CHECK(animals.sort_by([](auto it){ return it.size(); }) == make("cat"s, "mouse"s, "giraffe"s, "hippopotamus"s));
+		CHECK(animals.sort_by([&](auto it){
+			count++;
+			return it.size();
+		}) == make("cat"s, "mouse"s, "giraffe"s, "hippopotamus"s));
+		CHECK(count == 4);
 
 		auto v = make(5, 3, 1, 4, 2);
 		CHECK(v.sort_by().with_index(std::plus{}) == make(1, 3, 5, 2, 4));
