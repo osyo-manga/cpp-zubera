@@ -302,7 +302,7 @@ struct enumerable{
 
 	template<typename Comp>
 	constexpr auto
-	max(std::size_t n, Comp&& comp){
+	max(std::size_t n, Comp&& comp) const{
 		return self().sort(comp).reverse_each().take(n);
 	}
 
@@ -343,6 +343,61 @@ struct enumerable{
 	constexpr auto
 	max_by(std::size_t n) const{
 		return self().to_enum([=](auto self, auto y) constexpr{ return self.max_by(n, y); });
+	}
+
+	template<typename Comp,
+		std::enable_if_t<!std::is_integral_v<std::decay_t<Comp>>, std::nullptr_t> = nullptr
+	>
+	constexpr auto
+	min(Comp&& comp) const{
+		return self().inject(self().first(), [&](auto min, auto it) constexpr{
+			return comp(*min, it) > 0 ? it : *min;
+		});
+	}
+
+	template<typename Comp>
+	constexpr auto
+	min(std::size_t n, Comp&& comp) const{
+		return self().sort(comp).take(n);
+	}
+
+	constexpr auto
+	min(std::size_t n) const{
+		return self().sort().take(n);
+	}
+
+	constexpr auto
+	min() const{
+		return self().min([](auto a, auto b){ return a > b; });
+	}
+
+	template<typename F,
+		std::enable_if_t<!std::is_integral_v<std::decay_t<F>>, std::nullptr_t> = nullptr
+	>
+	constexpr auto
+	min_by(F&& f) const{
+		auto result = self().map([&](auto it) constexpr{
+			return std::make_pair(f(it), it);
+		}).min([](auto a, auto b) constexpr{
+			return a.first > b.first;
+		});
+		return result ? std::make_optional(result->second) : std::nullopt;
+	}
+
+	template<typename F>
+	constexpr auto
+	min_by(std::size_t n, F&& f){
+		return self().sort_by(f).take(n);
+	}
+
+	constexpr auto
+	min_by() const{
+		return self().to_enum([](auto self, auto y) constexpr{ return self.min_by(y); });
+	}
+
+	constexpr auto
+	min_by(std::size_t n) const{
+		return self().to_enum([=](auto self, auto y) constexpr{ return self.min_by(n, y); });
 	}
 
 	template<typename... Args>
