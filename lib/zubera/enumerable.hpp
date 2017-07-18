@@ -345,6 +345,12 @@ struct enumerable{
 		return self().to_enum([=](auto self, auto y) constexpr{ return self.max_by(n, y); });
 	}
 
+	template<typename... Args>
+	constexpr auto
+	member(Args&&... args) const{
+		return self().include(std::forward<Args>(args)...);
+	}
+
 	template<typename Comp,
 		std::enable_if_t<!std::is_integral_v<std::decay_t<Comp>>, std::nullptr_t> = nullptr
 	>
@@ -400,10 +406,41 @@ struct enumerable{
 		return self().to_enum([=](auto self, auto y) constexpr{ return self.min_by(n, y); });
 	}
 
-	template<typename... Args>
+	template<typename Comp>
 	constexpr auto
-	member(Args&&... args) const{
-		return self().include(std::forward<Args>(args)...);
+	minmax(Comp&& comp) const{
+		auto first = self().first();
+		return self().inject(zubera::tuple{first, first} , [&](auto result, auto it) constexpr{
+			auto [min, max] = result;
+			return zubera::tuple{
+				comp(*min, it) > 0 ? it   : *min,
+				comp(*max, it) > 0 ? *max : it,
+			};
+		});
+	}
+
+	constexpr auto
+	minmax() const{
+		return self().minmax([](auto a, auto b){ return a > b; });
+	}
+
+	template<typename F,
+		std::enable_if_t<!std::is_integral_v<std::decay_t<F>>, std::nullptr_t> = nullptr
+	>
+	constexpr auto
+	minmax_by(F&& f) const{
+		return self().map([&](auto it) constexpr{
+			return std::make_pair(f(it), it);
+		}).minmax([](auto a, auto b) constexpr{
+			return a.first > b.first;
+		}).map([](auto it){
+			return it ? std::make_optional(it->second) : std::nullopt;
+		});
+	}
+
+	constexpr auto
+	minmax_by() const{
+		return self().to_enum([](auto self, auto y) constexpr{ return self.minmax_by(y); });
 	}
 
 	template<typename Pred>

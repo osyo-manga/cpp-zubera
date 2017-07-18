@@ -272,6 +272,11 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(v.max_by(3).with_index(std::plus{}) == make(4, 2, 5));
 	}
 
+	SECTION("member"){
+		CHECK(range1_5.member(2));
+		CHECK_FALSE(range1_5.member(0));
+	}
+
 	SECTION("min"){
 		auto rand = make(3, 2, 5, 1, 4, 4);
 
@@ -308,10 +313,27 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(*v.min_by().with_index(std::plus{}) == 1);
 		CHECK(v.min_by(3).with_index(std::plus{}) == make(1, 3, 5));
 	}
+	
+	SECTION("mimmax"){
+		auto v = zubera::vector{ 5, 3, 1, 4, 2 };
+		auto to_star = [](auto it){ return *it; };
+		CHECK(v.minmax().map(to_star) == make(1, 5));
+		CHECK(make(3).minmax().map(to_star) == make(3, 3));
+		CHECK(make().minmax().map([](auto it){ return bool(it); }) == make(false, false));
+	}
 
-	SECTION("member"){
-		CHECK(range1_5.member(2));
-		CHECK_FALSE(range1_5.member(0));
+	SECTION("minmax_by"){
+		auto to_star = [](auto it){ return *it; };
+		auto animals = zubera::vector{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+		int count = 0;
+		auto f = [&](auto it){ count++; return it.size(); };
+
+		CHECK(animals.minmax_by(f).map(to_star) == make("cat"s, "hippopotamus"s));
+		CHECK(count == 4);
+		CHECK(make().minmax_by([](auto){ return 0; }).map([](auto it){ return bool(it); }) == make(false, false));
+
+		auto v = zubera::vector{ 5, 3, 1, 4, 2 };
+		CHECK(v.minmax_by().with_index(std::plus{}).map(to_star) == make(1, 4));
 	}
 
 	SECTION("none_of"){
