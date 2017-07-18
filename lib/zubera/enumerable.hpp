@@ -254,6 +254,12 @@ struct enumerable{
 		return self().take(n);
 	}
 
+	template<typename T>
+	constexpr bool
+	include(T&& t) const{
+		return count(std::forward<T>(t)) != 0;
+	}
+
 	template<typename Init, typename F>
 	constexpr auto
 	inject(Init init, F f) const{
@@ -268,6 +274,20 @@ struct enumerable{
 	constexpr auto
 	inject(F f) const{
 		return self().inject(value_t{}, std::forward<F>(f));
+	}
+
+	template<typename F>
+	constexpr auto
+	map(F&& f) const{
+		using result_t = Result<decltype(f(std::declval<value_t>()))>;
+		return self().inject(result_t{}, [&f](auto result, auto it) constexpr{
+			return result.push(f(it));
+		});
+	}
+
+	constexpr auto
+	map() const{
+		return self().to_enum([](auto self, auto y) constexpr{ return self.map(y); });
 	}
 
 	template<typename Comp,
@@ -296,18 +316,10 @@ struct enumerable{
 		return self().max([](auto a, auto b){ return a > b; });
 	}
 
-	template<typename F>
+	template<typename... Args>
 	constexpr auto
-	map(F&& f) const{
-		using result_t = Result<decltype(f(std::declval<value_t>()))>;
-		return self().inject(result_t{}, [&f](auto result, auto it) constexpr{
-			return result.push(f(it));
-		});
-	}
-
-	constexpr auto
-	map() const{
-		return self().to_enum([](auto self, auto y) constexpr{ return self.map(y); });
+	member(Args&&... args) const{
+		return self().include(std::forward<Args>(args)...);
 	}
 
 	template<typename Pred>

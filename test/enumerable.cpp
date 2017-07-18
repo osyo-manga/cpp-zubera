@@ -203,6 +203,11 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(make().first(3).is_empty());
 	}
 
+	SECTION("include"){
+		CHECK(range1_5.include(2));
+		CHECK_FALSE(range1_5.include(0));
+	}
+
 	SECTION("inject"){
 		CHECK((range1_5.inject(0, plus) == 15));
 		CHECK((make('m', 'a', 'd', 'o').inject("homu"s, plus) == "homumado"));
@@ -238,6 +243,11 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(rand.max(10) == make(5, 4, 4, 3, 2, 1));
 		CHECK(rand.max(-1) == make(5, 4, 4, 3, 2, 1));
 		CHECK(rand.max(3, [](auto a, auto b){ return a > b ? -1 : 1; }) == make(1, 2, 3));
+	}
+
+	SECTION("member"){
+		CHECK(range1_5.member(2));
+		CHECK_FALSE(range1_5.member(0));
 	}
 
 	SECTION("none_of"){
