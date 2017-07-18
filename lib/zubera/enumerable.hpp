@@ -296,7 +296,7 @@ struct enumerable{
 	constexpr auto
 	max(Comp&& comp) const{
 		return self().inject(self().first(), [&](auto max, auto it) constexpr{
-			return comp(max, it) > 0 ? max : it;
+			return comp(*max, it) > 0 ? *max : it;
 		});
 	}
 
@@ -314,6 +314,35 @@ struct enumerable{
 	constexpr auto
 	max() const{
 		return self().max([](auto a, auto b){ return a > b; });
+	}
+
+	template<typename F,
+		std::enable_if_t<!std::is_integral_v<std::decay_t<F>>, std::nullptr_t> = nullptr
+	>
+	constexpr auto
+	max_by(F&& f) const{
+		auto result = self().map([&](auto it) constexpr{
+			return std::make_pair(f(it), it);
+		}).max([](auto a, auto b) constexpr{
+			return a.first > b.first;
+		});
+		return result ? std::make_optional(result->second) : std::nullopt;
+	}
+
+	template<typename F>
+	constexpr auto
+	max_by(std::size_t n, F&& f){
+		return self().sort_by(f).reverse_each().take(n);
+	}
+
+	constexpr auto
+	max_by() const{
+		return self().to_enum([](auto self, auto y) constexpr{ return self.max_by(y); });
+	}
+
+	constexpr auto
+	max_by(std::size_t n) const{
+		return self().to_enum([=](auto self, auto y) constexpr{ return self.max_by(n, y); });
 	}
 
 	template<typename... Args>

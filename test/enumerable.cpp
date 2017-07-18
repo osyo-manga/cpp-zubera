@@ -252,6 +252,26 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(rand.max(3, [](auto a, auto b){ return a > b ? -1 : 1; }) == make(1, 2, 3));
 	}
 
+	SECTION("max_by"){
+		auto animals = zubera::vector{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+		int count = 0;
+		auto f = [&](auto it){ count++; return it.size(); };
+		CHECK(animals.max_by(f));
+		CHECK(count == 4);
+		CHECK(*animals.max_by(f) == "hippopotamus"s);
+		CHECK_FALSE(make().max_by([](auto){ return 0; }));
+
+		count = 0;
+		CHECK(animals.max_by(2, f) == make("hippopotamus"s, "giraffe"s));
+		CHECK(count == 4);
+		CHECK(make().max_by(2, [](auto){ return 0; }).count() == 0);
+
+		auto v = zubera::vector{ 5, 3, 1, 4, 2 };
+		CHECK( v.max_by().with_index(std::plus{}));
+		CHECK(*v.max_by().with_index(std::plus{}) == 4);
+		CHECK(v.max_by(3).with_index(std::plus{}) == make(4, 2, 5));
+	}
+
 	SECTION("member"){
 		CHECK(range1_5.member(2));
 		CHECK_FALSE(range1_5.member(0));
