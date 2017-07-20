@@ -36,8 +36,8 @@ main(){
 	};
 
 	auto at_cell = [&](auto const& table, auto x, auto y){
-		return x < 0 || width(table)  <= x ? 0
-			 : y < 0 || height(table) <= y ? 0
+		return x < 0 || width(table)  <= x ? false
+			 : y < 0 || height(table) <= y ? false
 			 : table[y][x];
 	};
 
@@ -64,7 +64,9 @@ main(){
 	
 	auto print = [&](auto const& table){
 		std::system("clear");
-		
+		// or
+// 		std::system("cls");
+	
 		std::cout << std::string(width(table) + 2, '-') << "\n";
 		table.each([](auto const& row){
 			std::cout << "|";
