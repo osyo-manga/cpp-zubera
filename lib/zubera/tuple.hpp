@@ -12,57 +12,70 @@ namespace zubera{
 
 namespace tuple_detail{
 
-template<typename T, typename U, typename... Args>
+template<typename T, typename Head = void, typename... Args>
 constexpr bool
-is_exist(){
-	if constexpr (std::is_same<T, U>{}){
-		return true;
+is_include(){
+	using samed = std::is_same<T, Head>;
+	return sizeof...(Args) == 0 ? samed{} : samed{} || is_include<T, Args...>();
+}
+
+template<template<class...> class Ts, typename... Args1, typename... Args2>
+constexpr Ts<Args1..., Args2...>
+cat(Ts<Args1...>, Ts<Args2...>){ return {}; }
+
+template<typename... Args>
+struct parameter_pack{};
+
+template<typename Head, typename... Args, template<class...> class Result = parameter_pack>
+constexpr auto
+unique_impl(){
+	if constexpr (sizeof...(Args) == 0){
+		return Result<Head>{};
 	}
-	else if constexpr (std::tuple_size<std::tuple<Args...>>{} == 0){
-		return false;
+	else if constexpr (is_include<Head, Args...>()){
+		return unique_impl<Args...>();
 	}
 	else {
-		return is_exist<T, Args...>();
+		return cat(Result<Head>{}, unique_impl<Args...>());
 	}
 }
 
-
-template<typename T, typename... Args>
+template<typename... Args, template<class...> class Result = parameter_pack>
 constexpr auto
 unique(){
-	if constexpr (std::tuple_size<std::tuple<Args...>>{} == 0){
-		return std::tuple<T>{};
-	}
-	else if constexpr (is_exist<T, Args...>()){
-		return unique<Args...>();
+	if constexpr (sizeof...(Args) == 0){
+		return Result<>{};
 	}
 	else {
-		return std::tuple_cat(std::tuple<T>{}, unique<Args...>());
+		return unique_impl<Args...>();
 	}
 }
 
 template<typename... Args>
-constexpr std::variant<Args...>
-tuple_to_variant(std::tuple<Args...>);
+using unique_t = decltype(unique<Args...>());
 
 
 template<typename... Args>
 struct variant;
 
-template<typename T, typename... Args>
-struct variant<T, Args...>{
-	using params = decltype(unique<T, Args...>());
-	using type = std::conditional_t<std::tuple_size<params>{} == 1, T, decltype(tuple_to_variant(params{}))>;
+template<typename T, typename U, typename... Args>
+struct variant<parameter_pack<T, U, Args...>>{
+	using type = std::variant<T, U, Args...>;
+};
+
+template<typename T>
+struct variant<parameter_pack<T>>{
+	using type = T;
 };
 
 template<>
-struct variant<>{
+struct variant<parameter_pack<>>{
 	using type = std::any;
-// 	using type = std::variant<>;
 };
 
 template<typename... Args>
-using variant_t = typename variant<Args...>::type;
+using variant_t = typename variant<unique_t<Args...>>::type;
+
 
 template<typename T>
 struct unwrap_refwrapper{

@@ -14,6 +14,19 @@ struct type_{
 template<typename T>
 constexpr type_<T> type{};
 
+TEST_CASE("zubera::tuple::tuple_detail", "[zubera][enumerable][tuple][detail]"){
+	using namespace zubera::tuple_detail;
+	static_assert(std::is_same<unique_t<int, int>, parameter_pack<int>>{}, "");
+	static_assert(std::is_same<unique_t<int, int, float>, parameter_pack<int, float>>{}, "");
+	static_assert(std::is_same<unique_t<int, int, float, int, float>, parameter_pack<int, float>>{}, "");
+	static_assert(std::is_same<unique_t<int, int&>, parameter_pack<int, int&>>{}, "");
+	static_assert(std::is_same<variant_t<int, int&>, std::variant<int, int&>>{}, "");
+	static_assert(std::is_same<variant_t<int, int>, int>{}, "");
+	static_assert(std::is_same<variant_t<int, int, float>, std::variant<int, float>>{}, "");
+	static_assert(std::is_same<variant_t<>, std::any>{}, "");
+
+}
+
 
 TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
 	using namespace std::literals::string_literals;
