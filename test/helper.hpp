@@ -2,6 +2,24 @@
 #define HELPER_H
 
 #include "./catch/catch.hpp"
+
+namespace zubera{
+
+template<typename T>
+std::ostream&
+operator <<(std::ostream& os, std::optional<T> const& op){
+	if( op ){
+		return os << *op;
+	}
+	else {
+		return os << "nil";
+	}
+}
+
+}
+using zubera::operator <<;
+
+
 #include "../lib/zubera.hpp"
 
 #define CHECK_TYPE(a, b) CHECK_TYPE(std::is_same<decltype(a), decltype(b)>{});

@@ -576,6 +576,25 @@ struct enumerable{
 	}
 
 
+	template<typename TResult, typename... Arrays>
+	static constexpr auto
+	zip_impl(TResult&& result, Arrays&&... arrays){
+		if((... && arrays.is_empty())){
+			return result;
+		}
+		else {
+			return zip_impl(result.push(zubera::tuple{ arrays.first()... }), arrays.drop(1)...);
+		}
+	}
+
+	template<typename... Args>
+	constexpr auto
+	zip(Args&&... args) const{
+		using result_t = zubera::vector<decltype(zubera::tuple{ self().first(), args.first()... })>;
+		return enumerable::zip_impl(result_t{}, self(), std::forward<Args>(args)...);
+	}
+
+
 
 	template<typename F>
 	constexpr auto

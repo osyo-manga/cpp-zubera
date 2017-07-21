@@ -447,6 +447,13 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(v.take_while(is_under(0)) == make());
 	}
 
+	SECTION("zip"){
+		using zubera::tuple;
+		CHECK(make(1, 2).zip(make(3, 4)) == make(make(1, 3), make(2, 4)));
+		CHECK(make(1, 2).zip(make(3, 4), make(5, 6)) == make(make(1, 3, 5), make(2, 4, 6)));
+		CHECK((make(1, 2).zip(make(3)) == tuple{ tuple{1, 3}, tuple{2, std::nullopt} }));
+	}
+
 	SECTION("concat"){
 		CHECK(range1_5.concat(make(3, 4)) == make(1, 2, 3, 4, 5, 3, 4));
 		CHECK(range1_5.concat(make()) == make(1, 2, 3, 4, 5));
