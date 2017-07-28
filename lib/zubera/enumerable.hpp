@@ -137,7 +137,7 @@ struct enumerable{
 			f(self().take(num));
 			return;
 		}
-		self().each_with_index([&](auto, auto i){
+		self().each_with_index([&](auto, auto i) constexpr{
 			if( count - i < num ){
 				return;
 			}
@@ -183,7 +183,7 @@ struct enumerable{
 	template<typename Obj, typename F>
 	constexpr auto
 	each_with_object(Obj&& obj, F&& f){
-		self().each([&](auto it){
+		self().each([&](auto it) constexpr{
 			f(it, obj);
 		});
 		return obj;
