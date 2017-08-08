@@ -82,8 +82,9 @@ struct enumerable{
 		return self().count_if([](auto...) constexpr { return true; });
 	}
 
+	template<typename T>
 	constexpr auto
-	count(value_t const& t) const{
+	count(T&& t) const{
 		return self().count_if([&t](auto it) constexpr{ return it == t; });
 	}
 
