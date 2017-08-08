@@ -314,10 +314,11 @@ test_enumerable_functions(Maker make, Range range1_5){
 		CHECK(v.min_by(3).with_index(std::plus{}) == make(1, 3, 5));
 	}
 	
-	SECTION("mimmax"){
+	SECTION("minmax"){
 		auto v = make(5, 3, 1, 4, 2);
 		auto to_star = [](auto it){ return *it; };
 		CHECK(v.minmax().map(to_star) == make(1, 5));
+		CHECK(v.minmax([](auto a, auto b){ return a > b ? -1 : 1; }).map(to_star) == make(5, 1));
 		CHECK(make(3).minmax().map(to_star) == make(3, 3));
 		CHECK(make().minmax().map([](auto it){ return bool(it); }) == make(false, false));
 	}
