@@ -22,7 +22,7 @@ before_install :
 
 install:
   - sudo apt-get install gcc-7 g++-7
-  - sudo apt-get install -y clang-5.0
+  - sudo apt-get install -y --allow-unauthenticated clang-5.0
 
 script:
   - g++-7 -std=gnu++1z -Wall -Wextra -pedantic test/all.cpp && ./a.out
