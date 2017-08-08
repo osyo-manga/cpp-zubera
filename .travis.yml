@@ -10,7 +10,7 @@ addons:
       - llvm-toolchain-trusty-5.0
       - jonathonf/gcc-7.1/ubuntu
     packages:
-      - clang-5.0
+#       - clang-5.0
       - build-essential
       - binutils
 
@@ -22,6 +22,7 @@ before_install :
 
 install:
   - sudo apt-get install gcc-7 g++-7
+  - sudo apt-get install clang-5.0
 
 script:
   - g++-7 -std=gnu++1z -Wall -Wextra -pedantic test/all.cpp && ./a.out
