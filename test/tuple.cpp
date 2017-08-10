@@ -67,5 +67,26 @@ TEST_CASE("zubera::tuple", "[zubera][enumerable][tuple]"){
 		CHECK((zubera::tuple{1, 2, 3}.map([](auto) constexpr{
 			return "homu"s;
 		}) == zubera::vector{"homu"s, "homu"s, "homu"s}));
+
+		zubera::tuple t{};
+		{
+			zubera::vector<int> result = t.map([](auto){ return 0; });
+			CHECK(result.count() == 0);
+		}
+		{
+			zubera::vector<int> result = t.map([](auto){ return 0; }).to_a();
+			CHECK(result.count() == 0);
+		}
+	}
+
+	SECTION("minmax_by"){
+		zubera::tuple v{};
+		zubera::tuple<
+			std::optional<std::any>,
+			std::optional<std::any>
+		> result = v.minmax_by([](auto){ return 0; });
+		auto [min, max] = result;
+		CHECK_FALSE(bool(min));
+		CHECK_FALSE(bool(max));
 	}
 }
