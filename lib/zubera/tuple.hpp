@@ -12,60 +12,44 @@ namespace zubera{
 
 namespace tuple_detail{
 
-template<typename T, typename ...Args>
-constexpr auto is_include_v = (std::is_same_v<T, Args> || ...);
 
-template<template<class...> class Ts, typename... Args1, typename... Args2>
-constexpr Ts<Args1..., Args2...>
-cat(Ts<Args1...>, Ts<Args2...>){ return {}; }
+template<typename T, typename U>
+using tuple_cat_t = decltype(std::tuple_cat(std::declval<T>(), std::declval<U>()));
+
 
 template<typename... Args>
-struct parameter_pack{};
+struct unique;
 
-template<typename Head, typename... Args, template<class...> class Result = parameter_pack>
-constexpr auto
-unique_impl(){
-	if constexpr (sizeof...(Args) == 0){
-		return Result<Head>{};
-	}
-	else if constexpr (is_include_v<Head, Args...>){
-		return unique_impl<Args...>();
-	}
-	else {
-		return cat(Result<Head>{}, unique_impl<Args...>());
-	}
-}
+template<>
+struct unique<> : std::common_type<std::tuple<>>{};
 
-template<typename... Args, template<class...> class Result = parameter_pack>
-constexpr auto
-unique(){
-	if constexpr (sizeof...(Args) == 0){
-		return Result<>{};
-	}
-	else {
-		return unique_impl<Args...>();
-	}
-}
+template<typename Head, typename... Args>
+struct unique<Head, Args...> : std::conditional<
+	(std::is_same_v<Head, Args> || ...),
+	typename unique<Args...>::type,
+	tuple_detail::tuple_cat_t<std::tuple<Head>, typename unique<Args...>::type>
+>{};
+
 
 template<typename... Args>
-using unique_t = decltype(unique<Args...>());
+using unique_t = typename unique<Args...>::type;
 
 
 template<typename... Args>
 struct variant;
 
 template<typename T, typename U, typename... Args>
-struct variant<parameter_pack<T, U, Args...>>{
+struct variant<std::tuple<T, U, Args...>>{
 	using type = std::variant<T, U, Args...>;
 };
 
 template<typename T>
-struct variant<parameter_pack<T>>{
+struct variant<std::tuple<T>>{
 	using type = T;
 };
 
 template<>
-struct variant<parameter_pack<>>{
+struct variant<std::tuple<>>{
 	using type = std::any;
 };
 
