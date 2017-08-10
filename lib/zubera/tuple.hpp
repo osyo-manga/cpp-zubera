@@ -95,7 +95,9 @@ using special_decay_t = typename unwrap_refwrapper<typename std::decay<T>::type>
 
 
 template<typename... Args>
-struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, tuple_detail::variant_t<Args...>>{
+struct tuple
+	: std::tuple<Args...>
+	, enumerable<tuple<Args...>, tuple_detail::variant_t<Args...>> {
 	using enum_ = enumerable<tuple<Args...>, tuple_detail::variant_t<Args...>>;
 	using value_t = typename enum_::value_t;
 
@@ -114,19 +116,23 @@ struct tuple : std::tuple<Args...>, enumerable<tuple<Args...>, tuple_detail::var
 		return enum_::to_enum([](auto self, auto y) constexpr{ return self.each(y); });
 	}
 
-	// [WIP]
-// 	template<typename F>
-// 	constexpr auto
-// 	map(F&& f) const{
-// 		return std::apply([&](auto... args){
-// 			return zubera::tuple{ f(args)... };
-// 		}, (std::tuple<Args...>)(*this));
-// 	}
-//
-// 	constexpr auto
-// 	map() const{
-// 		return make_enumerator<typename enum_::value_t>([this](auto y) constexpr{ return this->map(y); });
-// 	}
+	template<typename F>
+	constexpr auto
+	map(F&& f) const{
+		if constexpr(sizeof...(Args) == 0){
+			return zubera::vector<decltype(f(std::declval<value_t>()))>{};
+		}
+		else {
+			return std::apply([&](auto... args){
+				return zubera::tuple{ f(args)... };
+			}, (std::tuple<Args...>)(*this));
+		}
+	}
+
+	constexpr auto
+	map() const{
+		return make_enumerator<typename enum_::value_t>([this](auto y) constexpr{ return this->map(y); });
+	}
 };
 
 template<typename... Args>
