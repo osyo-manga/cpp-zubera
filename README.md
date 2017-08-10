@@ -291,6 +291,7 @@ main(){
 int
 main(){
 	using namespace std::literals;
+
 	zubera::vector v{"homu"s, "mami"s, "mado"s};
 
 	v.each_with_index([](auto it, auto i){
@@ -324,6 +325,27 @@ main(){
 ```
 
 
+#### `find_all/select`
+
+```cpp
+#include <zubera.hpp>
+#include <string>
+
+int
+main(){
+	using namespace std::literals;
+
+	zubera::vector v{3, 6, 2, 5, 1, 4};
+
+	zubera::vector<int> evens = v.find_all([](auto it){ return it % 2 == 0; });
+	std::cout << evens << std::endl;
+	// output: [6, 2, 4]
+
+	return 0;
+}
+```
+
+
 #### `find_index`
 
 ```cpp
@@ -333,6 +355,7 @@ main(){
 int
 main(){
 	using namespace std::literals;
+
 	zubera::vector v{"homu"s, "mami"s, "mado"s, "mami"s, "mado"s};
 
 	std::optional<int> index = v.find_index([](auto it){ return it == "mado"; });
@@ -359,6 +382,7 @@ main(){
 int
 main(){
 	using namespace std::literals;
+
 	zubera::vector v{"homu"s, "mami"s, "mado"};
 
 	std::optional<std::string> head = v.first();
@@ -393,6 +417,7 @@ main(){
 int
 main(){
 	using namespace std::literals;
+
 	zubera::vector v{"homu"s, "mami"s, "mado"};
 
 	bool has_homu = v.include("homu");
@@ -463,10 +488,373 @@ main(){
 ```
 
 
+#### `max_by`
+
+```cpp
+#include <zubera.hpp>
+#include <string>
+
+int
+main(){
+	using namespace std::literals;
+	zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+
+	std::optional<std::string> top = v.max_by([](auto it){ return it.size(); });
+	std::cout << bool(top) << std::endl;
+	// output: 1
+	std::cout << *top << std::endl;
+	// output: hippopotamus
+
+	zubera::vector<std::string> tops = v.max_by(2, [](auto it){ return it.size(); });
+	std::cout << tops << std::endl;
+	// output: [hippopotamus, giraffe]
+
+	tops = zubera::vector<std::string>{}.max_by(2, [](auto it){ return it.size(); });
+	std::cout << tops << std::endl;
+	// output: []
+
+	return 0;
+}
+```
 
 
+#### `min`
+
+```cpp
+#include <zubera.hpp>
+
+int
+main(){
+	zubera::vector v{3, 2, 5, 1, 4};
+
+	std::optional<int> top = v.min();
+	std::cout << bool(top) << std::endl;
+	// output: 1
+	std::cout << *top << std::endl;
+	// output: 1
+
+	top = zubera::vector<int>{}.min();
+	std::cout << bool(top) << std::endl;
+	// output: 0
+
+	zubera::vector<int> tops = v.min(2);
+	std::cout << tops << std::endl;
+	// output: [1, 2]
+
+	return 0;
+}
+```
 
 
+#### `min_by`
 
+```cpp
+#include <zubera.hpp>
+#include <string>
+
+int
+main(){
+	using namespace std::literals;
+	zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+
+	std::optional<std::string> top = v.min_by([](auto it){ return it.size(); });
+	std::cout << bool(top) << std::endl;
+	// output: 1
+	std::cout << *top << std::endl;
+	// output: cat
+
+	zubera::vector<std::string> tops = v.min_by(2, [](auto it){ return it.size(); });
+	std::cout << tops << std::endl;
+	// output: [cat, mouse]
+
+	tops = zubera::vector<std::string>{}.min_by(2, [](auto it){ return it.size(); });
+	std::cout << tops << std::endl;
+	// output: []
+
+	return 0;
+}
+```
+
+#### `minmax`
+
+```cpp
+#include <zubera.hpp>
+
+int
+main(){
+	zubera::vector v{3, 2, 5, 1, 4};
+
+	zubera::tuple<
+		std::optional<int>,
+		std::optional<int>
+	> result = v.minmax();
+	auto [min, max] = result;
+
+	std::cout << bool(min) << " : " << bool(max) << std::endl;
+	// output: 1 : 1
+	std::cout << *min << " : " << *max << std::endl;
+	// output: 1 : 5
+
+
+	result = zubera::vector<int>{}.minmax();
+	std::tie(min, max) = result;
+
+	std::cout << bool(min) << " : " << bool(max) << std::endl;
+	// output: 0 : 0
+
+	return 0;
+}
+```
+
+
+#### `minmax_by`
+
+```cpp
+#include <zubera.hpp>
+#include <string>
+
+int
+main(){
+	using namespace std::literals;
+
+	zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+
+	zubera::tuple<
+		std::optional<std::string>,
+		std::optional<std::string>
+	> result = v.minmax_by([](auto it){ return it.size(); });
+	auto [min, max] = result;
+
+	std::cout << bool(min) << " : " << bool(max) << std::endl;
+	// output: 1 : 1
+	std::cout << *min << " : " << *max << std::endl;
+	// output: cat : hippopotamus
+
+	return 0;
+}
+```
+
+
+#### `none_of`
+
+```cpp
+#include <zubera.hpp>
+
+int
+main(){
+	zubera::vector v{3, 1, 5, 7};
+
+	bool result = v.none_of([](auto it){ return it % 2 == 0; });
+	std::cout << result << std::endl;
+	// output: 1
+
+	result = v.none_of([](auto it){ return it == 3; });
+	std::cout << result << std::endl;
+	// output: 0
+
+	return 0;
+}
+```
+
+
+#### `one_of`
+
+```cpp
+#include <zubera.hpp>
+
+int
+main(){
+	zubera::vector v{3, 1, 5, 7, 4};
+
+	bool result = v.one_of([](auto it){ return it % 2 == 0; });
+	std::cout << result << std::endl;
+	// output: 1
+
+	result = v.one_of([](auto it){ return it % 2 != 0; });
+	std::cout << result << std::endl;
+	// output: 0
+
+	return 0;
+}
+```
+
+
+#### `partition`
+
+```cpp
+#include <zubera.hpp>
+
+int
+main(){
+	zubera::vector v{4, 5, 2, 6, 3, 1};
+
+	zubera::tuple<
+		zubera::vector<int>,
+		zubera::vector<int>
+	> result = v.partition([](auto it){ return it % 2 == 0; });
+	auto [even, odd] = result;
+
+	std::cout << even << std::endl;
+	// output: [4, 2, 6]
+	std::cout << odd << std::endl;
+	// output: [5, 3, 1]
+
+
+	return 0;
+}
+```
+
+#### `reverse_each`
+
+```cpp
+#include <zubera.hpp>
+
+int
+main(){
+	zubera::vector v{1, 2, 3, 4, 5};
+
+	v.reverse_each([](auto it){
+		std::cout << it << ", ";
+	});
+	// output: 5, 4, 3, 2, 1,
+
+	return 0;
+}
+```
+
+#### `sort`
+
+```cpp
+#include <zubera.hpp>
+
+int
+main(){
+	zubera::vector v{3, 6, 2, 5, 1, 4};
+
+	zubera::vector<int> sorted = v.sort();
+	std::cout << sorted << std::endl;
+	// output: [1, 2, 3, 4, 5, 6]
+
+	zubera::vector<int> reversed = v.sort([](auto a, auto b){ return a < b ? 1 : -1; });
+	std::cout << reversed << std::endl;
+	// output: [6, 5, 4, 3, 2, 1]
+
+	return 0;
+}
+```
+
+
+#### `sort_by`
+
+```cpp
+#include <zubera.hpp>
+#include <string>
+
+int
+main(){
+	using namespace std::literals;
+
+	zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+
+	zubera::vector<std::string> sorted = v.sort_by([](auto it){ return it.size(); });
+	std::cout << sorted << std::endl;
+	// output: [cat, mouse, giraffe, hippopotamus]
+
+	return 0;
+}
+```
+
+#### `take`
+
+```cpp
+#include <zubera.hpp>
+
+int
+main(){
+	zubera::vector v{3, 6, 2, 5, 1, 4};
+
+	zubera::vector<int> result = v.take(3);
+	std::cout << result << std::endl;
+	// output: [3, 6, 2]
+
+	return 0;
+}
+```
+
+
+#### `take_while`
+
+```cpp
+#include <zubera.hpp>
+
+int
+main(){
+	zubera::vector v{2, 6, 3, 5, 1, 4};
+
+	zubera::vector<int> result = v.take_while([](auto it){ return it % 2 == 0; });
+	std::cout << result << std::endl;
+	// output: [2, 6]
+
+	return 0;
+}
+```
+
+
+#### `zip`
+
+```cpp
+#include <zubera.hpp>
+#include <string>
+
+template<typename T>
+auto
+print(T t){
+	std::cout << t;
+}
+
+template<typename T>
+auto
+print(std::optional<T> op){
+	if( op ){
+		std::cout << *op;
+	}
+	else{
+		std::cout << "None";
+	}
+}
+
+int
+main(){
+	using namespace std::literals;
+
+	zubera::vector numbers{1, 2, 3, 4};
+	zubera::vector names{"homu"s, "mami"s, "mado"s};
+	zubera::vector ages{14, 15, 14};
+
+	zubera::vector<
+		zubera::tuple<
+			std::optional<int>,
+			std::optional<std::string>,
+			std::optional<int>
+		>
+	> datas = numbers.zip(names, ages);
+
+	for(auto&& [number, name, age] : datas){
+		std::cout << "[";
+		print(number); std::cout << ", ";
+		print(name);   std::cout << ", ";
+		print(age);    std::cout << "]\n";
+	}
+	/* output:
+	[1, homu, 14]
+	[2, mami, 15]
+	[3, mado, 14]
+	[4, None, None]
+	*/
+	
+
+	return 0;
+}
+```
 
 
