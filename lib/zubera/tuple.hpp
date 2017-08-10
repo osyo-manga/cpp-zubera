@@ -12,12 +12,8 @@ namespace zubera{
 
 namespace tuple_detail{
 
-template<typename T, typename Head = void, typename... Args>
-constexpr bool
-is_include(){
-	using samed = std::is_same<T, Head>;
-	return sizeof...(Args) == 0 ? samed{} : samed{} || is_include<T, Args...>();
-}
+template<typename T, typename ...Args>
+constexpr auto is_include_v = (std::is_same_v<T, Args> || ...);
 
 template<template<class...> class Ts, typename... Args1, typename... Args2>
 constexpr Ts<Args1..., Args2...>
@@ -32,7 +28,7 @@ unique_impl(){
 	if constexpr (sizeof...(Args) == 0){
 		return Result<Head>{};
 	}
-	else if constexpr (is_include<Head, Args...>()){
+	else if constexpr (is_include_v<Head, Args...>){
 		return unique_impl<Args...>();
 	}
 	else {
