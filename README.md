@@ -62,21 +62,21 @@
 
 int
 main(){
-	zubera::vector v{2, 4, 6, 8};
-	
-	bool result = v.all_of([](auto it){
-		return it % 2 == 0;
-	});
-	std::cout << result << std::endl;
-	// output: 1
+    zubera::vector v{2, 4, 6, 8};
+    
+    bool result = v.all_of([](auto it){
+        return it % 2 == 0;
+    });
+    std::cout << result << std::endl;
+    // output: 1
 
-	result = v.all_of([](auto it){
-		return it <= 6;
-	});
-	std::cout << result << std::endl;
-	// output: 0
+    result = v.all_of([](auto it){
+        return it <= 6;
+    });
+    std::cout << result << std::endl;
+    // output: 0
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -87,27 +87,27 @@ main(){
 
 int
 main(){
-	zubera::vector v{1, 2, 3};
-	
-	bool result = v.any_of([](auto it){
-		return it % 2 == 0;
-	});
-	std::cout << result << std::endl;
-	// output: 1
+    zubera::vector v{1, 2, 3};
+    
+    bool result = v.any_of([](auto it){
+        return it % 2 == 0;
+    });
+    std::cout << result << std::endl;
+    // output: 1
 
-	result = v.any_of([](auto it){
-		return it % 2 != 0;
-	});
-	std::cout << result << std::endl;
-	// output: 1
+    result = v.any_of([](auto it){
+        return it % 2 != 0;
+    });
+    std::cout << result << std::endl;
+    // output: 1
 
-	result = v.all_of([](auto it){
-		return it > 4;
-	});
-	std::cout << result << std::endl;
-	// output: 0
+    result = v.all_of([](auto it){
+        return it > 4;
+    });
+    std::cout << result << std::endl;
+    // output: 0
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -119,21 +119,21 @@ main(){
 
 int
 main(){
-	zubera::vector v{1, 2, 3};
-	
-	zubera::vector<int> twices = v.collect([](auto it){
-		return it + it;
-	});
-	std::cout << twices << std::endl;
-	// output: [2, 4, 6]
-	
-	zubera::vector<std::string> strs = v.collect([](auto it){
-		return std::to_string(it) + std::to_string(it);
-	});
-	std::cout << strs << std::endl;
-	// output: [11, 22, 33]
+    zubera::vector v{1, 2, 3};
+    
+    zubera::vector<int> twices = v.collect([](auto it){
+        return it + it;
+    });
+    std::cout << twices << std::endl;
+    // output: [2, 4, 6]
+    
+    zubera::vector<std::string> strs = v.collect([](auto it){
+        return std::to_string(it) + std::to_string(it);
+    });
+    std::cout << strs << std::endl;
+    // output: [11, 22, 33]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -144,18 +144,18 @@ main(){
 
 int
 main(){
-	zubera::vector v{1, 1, 2, 3, 1, 2, 1, 4};
+    zubera::vector v{1, 1, 2, 3, 1, 2, 1, 4};
 
-	std::cout << v.count() << std::endl;
-	// output: 8
+    std::cout << v.count() << std::endl;
+    // output: 8
 
-	std::cout << v.count(1) << std::endl;
-	// output: 4
+    std::cout << v.count(1) << std::endl;
+    // output: 4
 
-	std::cout << v.count_if([](auto it){ return it % 2 == 0; }) << std::endl;
-	// output: 3
+    std::cout << v.count_if([](auto it){ return it % 2 == 0; }) << std::endl;
+    // output: 3
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -166,20 +166,20 @@ main(){
 
 int
 main(){
-	zubera::vector v{1, 2};
+    zubera::vector v{1, 2};
 
-	v.cycle(2, [](auto it){
-		std::cout << it << " ";
-	});
-	// output: 1 2 1 2
-	std::cout << std::endl;
+    v.cycle(2, [](auto it){
+        std::cout << it << " ";
+    });
+    // output: 1 2 1 2
+    std::cout << std::endl;
 
-	// cycle return zubera::enumerator
-	auto result = v.cycle(3);
-	std::cout << result << std::endl;
-	// output: [1, 2, 1, 2, 1, 2]
+    // cycle return zubera::enumerator
+    auto result = v.cycle(3);
+    std::cout << result << std::endl;
+    // output: [1, 2, 1, 2, 1, 2]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -190,37 +190,37 @@ main(){
 
 int
 main(){
-	zubera::vector v{5, 3, 2, 1, 4};
+    zubera::vector v{5, 3, 2, 1, 4};
 
-	std::optional<int> result = v.detect([](auto it){ return it % 2 == 0; });
-	std::cout << bool(result) << std::endl;
-	// output: 1
-	std::cout << *result << std::endl;
-	// output: 2
+    std::optional<int> result = v.detect([](auto it){ return it % 2 == 0; });
+    std::cout << bool(result) << std::endl;
+    // output: 1
+    std::cout << *result << std::endl;
+    // output: 2
 
-	result = v.detect([](auto it){ return it > 5; });
-	std::cout << bool(result) << std::endl;
-	// output: 0
+    result = v.detect([](auto it){ return it > 5; });
+    std::cout << bool(result) << std::endl;
+    // output: 0
 
-	return 0;
+    return 0;
 }
 ```
 
 
-#### drop
+#### `drop`
 
 ```cpp
 #include <zubera.hpp>
 
 int
 main(){
-	zubera::vector v{5, 3, 2, 1, 4};
+    zubera::vector v{5, 3, 2, 1, 4};
 
-	zubera::vector<int> result = v.drop(2);
-	std::cout << result << std::endl;
-	// output: [2, 1, 4]
+    zubera::vector<int> result = v.drop(2);
+    std::cout << result << std::endl;
+    // output: [2, 1, 4]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -233,13 +233,13 @@ main(){
 
 int
 main(){
-	zubera::vector v{5, 3, 7, 8, 2, 1, 4};
+    zubera::vector v{5, 3, 7, 8, 2, 1, 4};
 
-	zubera::vector<int> result = v.drop_while([](auto it){ return it % 2 != 0; });
-	std::cout << result << std::endl;
-	// output: [8, 2, 1, 4]
+    zubera::vector<int> result = v.drop_while([](auto it){ return it % 2 != 0; });
+    std::cout << result << std::endl;
+    // output: [8, 2, 1, 4]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -251,14 +251,14 @@ main(){
 
 int
 main(){
-	zubera::vector v{1, 2, 3, 4};
+    zubera::vector v{1, 2, 3, 4};
 
-	v.each_cons(2, [](zubera::vector<int> const& it){
-		std::cout << it << ", ";
-	});
-	// output: [1, 2], [2, 3], [3, 4],
+    v.each_cons(2, [](zubera::vector<int> const& it){
+        std::cout << it << ", ";
+    });
+    // output: [1, 2], [2, 3], [3, 4],
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -270,14 +270,14 @@ main(){
 
 int
 main(){
-	zubera::vector v{1, 2, 3, 4, 5};
+    zubera::vector v{1, 2, 3, 4, 5};
 
-	v.each_slice(2, [](zubera::vector<int> const& it){
-		std::cout << it << ", ";
-	});
-	// output: [1, 2], [3, 4], [5],
+    v.each_slice(2, [](zubera::vector<int> const& it){
+        std::cout << it << ", ";
+    });
+    // output: [1, 2], [3, 4], [5],
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -290,16 +290,16 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
+    using namespace std::literals;
 
-	zubera::vector v{"homu"s, "mami"s, "mado"s};
+    zubera::vector v{"homu"s, "mami"s, "mado"s};
 
-	v.each_with_index([](auto it, auto i){
-		std::cout << "(" << i << " : " << it << "), ";
-	});
-	// output: (0 : homu), (1 : mami), (2 : mado),
+    v.each_with_index([](auto it, auto i){
+        std::cout << "(" << i << " : " << it << "), ";
+    });
+    // output: (0 : homu), (1 : mami), (2 : mado),
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -312,15 +312,15 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
-	zubera::vector v{"homu"s, "mami"s, "mado"s};
+    using namespace std::literals;
+    zubera::vector v{"homu"s, "mami"s, "mado"s};
 
-	v.each_with_object("value: ", [](auto it, auto obj){
-		std::cout << obj << it << ", ";
-	});
-	// output: value: homu, value: mami, value: mado,
+    v.each_with_object("value: ", [](auto it, auto obj){
+        std::cout << obj << it << ", ";
+    });
+    // output: value: homu, value: mami, value: mado,
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -333,15 +333,15 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
+    using namespace std::literals;
 
-	zubera::vector v{3, 6, 2, 5, 1, 4};
+    zubera::vector v{3, 6, 2, 5, 1, 4};
 
-	zubera::vector<int> evens = v.find_all([](auto it){ return it % 2 == 0; });
-	std::cout << evens << std::endl;
-	// output: [6, 2, 4]
+    zubera::vector<int> evens = v.find_all([](auto it){ return it % 2 == 0; });
+    std::cout << evens << std::endl;
+    // output: [6, 2, 4]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -354,21 +354,21 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
+    using namespace std::literals;
 
-	zubera::vector v{"homu"s, "mami"s, "mado"s, "mami"s, "mado"s};
+    zubera::vector v{"homu"s, "mami"s, "mado"s, "mami"s, "mado"s};
 
-	std::optional<int> index = v.find_index([](auto it){ return it == "mado"; });
-	std::cout << bool(index) << std::endl;
-	// output: 1
-	std::cout << *index << std::endl;
-	// output: 2
+    std::optional<int> index = v.find_index([](auto it){ return it == "mado"; });
+    std::cout << bool(index) << std::endl;
+    // output: 1
+    std::cout << *index << std::endl;
+    // output: 2
 
-	index = v.find_index([](auto it){ return it == "saya"; });
-	std::cout << bool(index) << std::endl;
-	// output: 0
+    index = v.find_index([](auto it){ return it == "saya"; });
+    std::cout << bool(index) << std::endl;
+    // output: 0
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -381,29 +381,29 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
+    using namespace std::literals;
 
-	zubera::vector v{"homu"s, "mami"s, "mado"};
+    zubera::vector v{"homu"s, "mami"s, "mado"};
 
-	std::optional<std::string> head = v.first();
-	std::cout << bool(head) << std::endl;
-	// output: 1
-	std::cout << *head << std::endl;
-	// output: homu
+    std::optional<std::string> head = v.first();
+    std::cout << bool(head) << std::endl;
+    // output: 1
+    std::cout << *head << std::endl;
+    // output: homu
 
-	head = zubera::vector<std::string>{}.first();
-	std::cout << bool(head) << std::endl;
-	// output: 0
+    head = zubera::vector<std::string>{}.first();
+    std::cout << bool(head) << std::endl;
+    // output: 0
 
-	zubera::vector<std::string> heads = v.first(2);
-	std::cout << heads << std::endl;
-	// output: [homu, mami]
+    zubera::vector<std::string> heads = v.first(2);
+    std::cout << heads << std::endl;
+    // output: [homu, mami]
 
-	heads = zubera::vector<std::string>{}.first(2);
-	std::cout << result << std::endl;
-	// output: []
+    heads = zubera::vector<std::string>{}.first(2);
+    std::cout << result << std::endl;
+    // output: []
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -416,19 +416,19 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
+    using namespace std::literals;
 
-	zubera::vector v{"homu"s, "mami"s, "mado"};
+    zubera::vector v{"homu"s, "mami"s, "mado"};
 
-	bool has_homu = v.include("homu");
-	std::cout << has_homu << std::endl;
-	// output: 1
+    bool has_homu = v.include("homu");
+    std::cout << has_homu << std::endl;
+    // output: 1
 
-	bool has_saya = v.include("saya");
-	std::cout << has_saya << std::endl;
-	// output: 0
+    bool has_saya = v.include("saya");
+    std::cout << has_saya << std::endl;
+    // output: 0
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -440,22 +440,22 @@ main(){
 
 int
 main(){
-	zubera::vector v{1, 2, 3, 4, 5};
+    zubera::vector v{1, 2, 3, 4, 5};
 
-	int sum = v.inject([](auto sum, auto it){
-		return sum + it;
-	});
-	std::cout << sum << std::endl;
-	// output: 15
+    int sum = v.inject([](auto sum, auto it){
+        return sum + it;
+    });
+    std::cout << sum << std::endl;
+    // output: 15
 
-	// with init
-	sum = v.inject(10, [](auto sum, auto it){
-		return sum + it;
-	});
-	std::cout << sum << std::endl;
-	// output: 25
+    // with init
+    sum = v.inject(10, [](auto sum, auto it){
+        return sum + it;
+    });
+    std::cout << sum << std::endl;
+    // output: 25
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -467,23 +467,23 @@ main(){
 
 int
 main(){
-	zubera::vector v{3, 2, 5, 1, 4};
+    zubera::vector v{3, 2, 5, 1, 4};
 
-	std::optional<int> top = v.max();
-	std::cout << bool(top) << std::endl;
-	// output: 1
-	std::cout << *top << std::endl;
-	// output: 5
+    std::optional<int> top = v.max();
+    std::cout << bool(top) << std::endl;
+    // output: 1
+    std::cout << *top << std::endl;
+    // output: 5
 
-	top = zubera::vector<int>{}.max();
-	std::cout << bool(top) << std::endl;
-	// output: 0
+    top = zubera::vector<int>{}.max();
+    std::cout << bool(top) << std::endl;
+    // output: 0
 
-	zubera::vector<int> tops = v.max(2);
-	std::cout << tops << std::endl;
-	// output: [5, 4]
+    zubera::vector<int> tops = v.max(2);
+    std::cout << tops << std::endl;
+    // output: [5, 4]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -496,24 +496,24 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
-	zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+    using namespace std::literals;
+    zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
 
-	std::optional<std::string> top = v.max_by([](auto it){ return it.size(); });
-	std::cout << bool(top) << std::endl;
-	// output: 1
-	std::cout << *top << std::endl;
-	// output: hippopotamus
+    std::optional<std::string> top = v.max_by([](auto it){ return it.size(); });
+    std::cout << bool(top) << std::endl;
+    // output: 1
+    std::cout << *top << std::endl;
+    // output: hippopotamus
 
-	zubera::vector<std::string> tops = v.max_by(2, [](auto it){ return it.size(); });
-	std::cout << tops << std::endl;
-	// output: [hippopotamus, giraffe]
+    zubera::vector<std::string> tops = v.max_by(2, [](auto it){ return it.size(); });
+    std::cout << tops << std::endl;
+    // output: [hippopotamus, giraffe]
 
-	tops = zubera::vector<std::string>{}.max_by(2, [](auto it){ return it.size(); });
-	std::cout << tops << std::endl;
-	// output: []
+    tops = zubera::vector<std::string>{}.max_by(2, [](auto it){ return it.size(); });
+    std::cout << tops << std::endl;
+    // output: []
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -525,23 +525,23 @@ main(){
 
 int
 main(){
-	zubera::vector v{3, 2, 5, 1, 4};
+    zubera::vector v{3, 2, 5, 1, 4};
 
-	std::optional<int> top = v.min();
-	std::cout << bool(top) << std::endl;
-	// output: 1
-	std::cout << *top << std::endl;
-	// output: 1
+    std::optional<int> top = v.min();
+    std::cout << bool(top) << std::endl;
+    // output: 1
+    std::cout << *top << std::endl;
+    // output: 1
 
-	top = zubera::vector<int>{}.min();
-	std::cout << bool(top) << std::endl;
-	// output: 0
+    top = zubera::vector<int>{}.min();
+    std::cout << bool(top) << std::endl;
+    // output: 0
 
-	zubera::vector<int> tops = v.min(2);
-	std::cout << tops << std::endl;
-	// output: [1, 2]
+    zubera::vector<int> tops = v.min(2);
+    std::cout << tops << std::endl;
+    // output: [1, 2]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -554,24 +554,24 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
-	zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+    using namespace std::literals;
+    zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
 
-	std::optional<std::string> top = v.min_by([](auto it){ return it.size(); });
-	std::cout << bool(top) << std::endl;
-	// output: 1
-	std::cout << *top << std::endl;
-	// output: cat
+    std::optional<std::string> top = v.min_by([](auto it){ return it.size(); });
+    std::cout << bool(top) << std::endl;
+    // output: 1
+    std::cout << *top << std::endl;
+    // output: cat
 
-	zubera::vector<std::string> tops = v.min_by(2, [](auto it){ return it.size(); });
-	std::cout << tops << std::endl;
-	// output: [cat, mouse]
+    zubera::vector<std::string> tops = v.min_by(2, [](auto it){ return it.size(); });
+    std::cout << tops << std::endl;
+    // output: [cat, mouse]
 
-	tops = zubera::vector<std::string>{}.min_by(2, [](auto it){ return it.size(); });
-	std::cout << tops << std::endl;
-	// output: []
+    tops = zubera::vector<std::string>{}.min_by(2, [](auto it){ return it.size(); });
+    std::cout << tops << std::endl;
+    // output: []
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -582,27 +582,27 @@ main(){
 
 int
 main(){
-	zubera::vector v{3, 2, 5, 1, 4};
+    zubera::vector v{3, 2, 5, 1, 4};
 
-	zubera::tuple<
-		std::optional<int>,
-		std::optional<int>
-	> result = v.minmax();
-	auto [min, max] = result;
+    zubera::tuple<
+        std::optional<int>,
+        std::optional<int>
+    > result = v.minmax();
+    auto [min, max] = result;
 
-	std::cout << bool(min) << " : " << bool(max) << std::endl;
-	// output: 1 : 1
-	std::cout << *min << " : " << *max << std::endl;
-	// output: 1 : 5
+    std::cout << bool(min) << " : " << bool(max) << std::endl;
+    // output: 1 : 1
+    std::cout << *min << " : " << *max << std::endl;
+    // output: 1 : 5
 
 
-	result = zubera::vector<int>{}.minmax();
-	std::tie(min, max) = result;
+    result = zubera::vector<int>{}.minmax();
+    std::tie(min, max) = result;
 
-	std::cout << bool(min) << " : " << bool(max) << std::endl;
-	// output: 0 : 0
+    std::cout << bool(min) << " : " << bool(max) << std::endl;
+    // output: 0 : 0
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -615,22 +615,22 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
+    using namespace std::literals;
 
-	zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+    zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
 
-	zubera::tuple<
-		std::optional<std::string>,
-		std::optional<std::string>
-	> result = v.minmax_by([](auto it){ return it.size(); });
-	auto [min, max] = result;
+    zubera::tuple<
+        std::optional<std::string>,
+        std::optional<std::string>
+    > result = v.minmax_by([](auto it){ return it.size(); });
+    auto [min, max] = result;
 
-	std::cout << bool(min) << " : " << bool(max) << std::endl;
-	// output: 1 : 1
-	std::cout << *min << " : " << *max << std::endl;
-	// output: cat : hippopotamus
+    std::cout << bool(min) << " : " << bool(max) << std::endl;
+    // output: 1 : 1
+    std::cout << *min << " : " << *max << std::endl;
+    // output: cat : hippopotamus
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -642,17 +642,17 @@ main(){
 
 int
 main(){
-	zubera::vector v{3, 1, 5, 7};
+    zubera::vector v{3, 1, 5, 7};
 
-	bool result = v.none_of([](auto it){ return it % 2 == 0; });
-	std::cout << result << std::endl;
-	// output: 1
+    bool result = v.none_of([](auto it){ return it % 2 == 0; });
+    std::cout << result << std::endl;
+    // output: 1
 
-	result = v.none_of([](auto it){ return it == 3; });
-	std::cout << result << std::endl;
-	// output: 0
+    result = v.none_of([](auto it){ return it == 3; });
+    std::cout << result << std::endl;
+    // output: 0
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -664,17 +664,17 @@ main(){
 
 int
 main(){
-	zubera::vector v{3, 1, 5, 7, 4};
+    zubera::vector v{3, 1, 5, 7, 4};
 
-	bool result = v.one_of([](auto it){ return it % 2 == 0; });
-	std::cout << result << std::endl;
-	// output: 1
+    bool result = v.one_of([](auto it){ return it % 2 == 0; });
+    std::cout << result << std::endl;
+    // output: 1
 
-	result = v.one_of([](auto it){ return it % 2 != 0; });
-	std::cout << result << std::endl;
-	// output: 0
+    result = v.one_of([](auto it){ return it % 2 != 0; });
+    std::cout << result << std::endl;
+    // output: 0
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -686,21 +686,21 @@ main(){
 
 int
 main(){
-	zubera::vector v{4, 5, 2, 6, 3, 1};
+    zubera::vector v{4, 5, 2, 6, 3, 1};
 
-	zubera::tuple<
-		zubera::vector<int>,
-		zubera::vector<int>
-	> result = v.partition([](auto it){ return it % 2 == 0; });
-	auto [even, odd] = result;
+    zubera::tuple<
+        zubera::vector<int>,
+        zubera::vector<int>
+    > result = v.partition([](auto it){ return it % 2 == 0; });
+    auto [even, odd] = result;
 
-	std::cout << even << std::endl;
-	// output: [4, 2, 6]
-	std::cout << odd << std::endl;
-	// output: [5, 3, 1]
+    std::cout << even << std::endl;
+    // output: [4, 2, 6]
+    std::cout << odd << std::endl;
+    // output: [5, 3, 1]
 
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -711,14 +711,14 @@ main(){
 
 int
 main(){
-	zubera::vector v{1, 2, 3, 4, 5};
+    zubera::vector v{1, 2, 3, 4, 5};
 
-	v.reverse_each([](auto it){
-		std::cout << it << ", ";
-	});
-	// output: 5, 4, 3, 2, 1,
+    v.reverse_each([](auto it){
+        std::cout << it << ", ";
+    });
+    // output: 5, 4, 3, 2, 1,
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -729,17 +729,17 @@ main(){
 
 int
 main(){
-	zubera::vector v{3, 6, 2, 5, 1, 4};
+    zubera::vector v{3, 6, 2, 5, 1, 4};
 
-	zubera::vector<int> sorted = v.sort();
-	std::cout << sorted << std::endl;
-	// output: [1, 2, 3, 4, 5, 6]
+    zubera::vector<int> sorted = v.sort();
+    std::cout << sorted << std::endl;
+    // output: [1, 2, 3, 4, 5, 6]
 
-	zubera::vector<int> reversed = v.sort([](auto a, auto b){ return a < b ? 1 : -1; });
-	std::cout << reversed << std::endl;
-	// output: [6, 5, 4, 3, 2, 1]
+    zubera::vector<int> reversed = v.sort([](auto a, auto b){ return a < b ? 1 : -1; });
+    std::cout << reversed << std::endl;
+    // output: [6, 5, 4, 3, 2, 1]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -752,15 +752,15 @@ main(){
 
 int
 main(){
-	using namespace std::literals;
+    using namespace std::literals;
 
-	zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
+    zubera::vector v{"giraffe"s, "mouse"s, "hippopotamus"s, "cat"s};
 
-	zubera::vector<std::string> sorted = v.sort_by([](auto it){ return it.size(); });
-	std::cout << sorted << std::endl;
-	// output: [cat, mouse, giraffe, hippopotamus]
+    zubera::vector<std::string> sorted = v.sort_by([](auto it){ return it.size(); });
+    std::cout << sorted << std::endl;
+    // output: [cat, mouse, giraffe, hippopotamus]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -771,13 +771,13 @@ main(){
 
 int
 main(){
-	zubera::vector v{3, 6, 2, 5, 1, 4};
+    zubera::vector v{3, 6, 2, 5, 1, 4};
 
-	zubera::vector<int> result = v.take(3);
-	std::cout << result << std::endl;
-	// output: [3, 6, 2]
+    zubera::vector<int> result = v.take(3);
+    std::cout << result << std::endl;
+    // output: [3, 6, 2]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -789,13 +789,13 @@ main(){
 
 int
 main(){
-	zubera::vector v{2, 6, 3, 5, 1, 4};
+    zubera::vector v{2, 6, 3, 5, 1, 4};
 
-	zubera::vector<int> result = v.take_while([](auto it){ return it % 2 == 0; });
-	std::cout << result << std::endl;
-	// output: [2, 6]
+    zubera::vector<int> result = v.take_while([](auto it){ return it % 2 == 0; });
+    std::cout << result << std::endl;
+    // output: [2, 6]
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -809,51 +809,51 @@ main(){
 template<typename T>
 auto
 print(T t){
-	std::cout << t;
+    std::cout << t;
 }
 
 template<typename T>
 auto
 print(std::optional<T> op){
-	if( op ){
-		std::cout << *op;
-	}
-	else{
-		std::cout << "None";
-	}
+    if( op ){
+        std::cout << *op;
+    }
+    else{
+        std::cout << "None";
+    }
 }
 
 int
 main(){
-	using namespace std::literals;
+    using namespace std::literals;
 
-	zubera::vector numbers{1, 2, 3, 4};
-	zubera::vector names{"homu"s, "mami"s, "mado"s};
-	zubera::vector ages{14, 15, 14};
+    zubera::vector numbers{1, 2, 3, 4};
+    zubera::vector names{"homu"s, "mami"s, "mado"s};
+    zubera::vector ages{14, 15, 14};
 
-	zubera::vector<
-		zubera::tuple<
-			std::optional<int>,
-			std::optional<std::string>,
-			std::optional<int>
-		>
-	> datas = numbers.zip(names, ages);
+    zubera::vector<
+        zubera::tuple<
+            std::optional<int>,
+            std::optional<std::string>,
+            std::optional<int>
+        >
+    > datas = numbers.zip(names, ages);
 
-	for(auto&& [number, name, age] : datas){
-		std::cout << "[";
-		print(number); std::cout << ", ";
-		print(name);   std::cout << ", ";
-		print(age);    std::cout << "]\n";
-	}
-	/* output:
-	[1, homu, 14]
-	[2, mami, 15]
-	[3, mado, 14]
-	[4, None, None]
-	*/
-	
+    for(auto&& [number, name, age] : datas){
+        std::cout << "[";
+        print(number); std::cout << ", ";
+        print(name);   std::cout << ", ";
+        print(age);    std::cout << "]\n";
+    }
+    /* output:
+    [1, homu, 14]
+    [2, mami, 15]
+    [3, mado, 14]
+    [4, None, None]
+    */
+    
 
-	return 0;
+    return 0;
 }
 ```
 
