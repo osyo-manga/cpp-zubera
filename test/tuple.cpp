@@ -14,6 +14,17 @@ struct type_{
 template<typename T>
 constexpr type_<T> type{};
 
+TEST_CASE("zubera::tuple::tuple_detail::is_include_v", "[zubera][enumerable][tuple][detail]"){
+	using namespace zubera::tuple_detail;
+	static_assert(is_include_v<int, float, int>, "");
+	static_assert(is_include_v<int, float, int, int>, "");
+	static_assert(is_include_v<int, double, double, float, int>, "");
+
+	static_assert(!is_include_v<int, float, char>, "");
+	static_assert(!is_include_v<int, float, unsigned int>, "");
+}
+
+
 TEST_CASE("zubera::tuple::tuple_detail", "[zubera][enumerable][tuple][detail]"){
 	using namespace zubera::tuple_detail;
 	static_assert(std::is_same<unique_t<int, int>, parameter_pack<int>>{}, "");
