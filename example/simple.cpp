@@ -37,15 +37,27 @@ main(){
 	X x;
 
 	// data to strings.
-	std::vector<std::string> strs = x.map([](auto it){
+	// zubera::vector is enumerable std::vector.
+	zubera::vector<std::string> strs = x.map([](auto it){
 		return "value:" + std::to_string(it);
 	});
-	print(strs);
-	// output: value:1 value:2 value:3 value:4 value:5
+
+	// each loop
+	strs.each([](auto str){
+		std::cout << str << std::endl;
+	});
+	// output: [value:1, value:2, value:3, value:4, value:5]
+
+
+	// zubera::vector to std::vector
+	std::vector<std::string> v_strs = strs;
+	for(auto&& str : v_strs){
+		std::cout << str << std::endl;
+	}
 
 
 	// filtering by data.
-	std::vector<int> evens = x.select([](auto it){
+	zubera::vector<int> evens = x.select([](auto it){
 		return it % 2 == 0;
 	});
 	print(evens);
@@ -53,7 +65,7 @@ main(){
 
 
 	// method chain.
-	std::vector<std::string> twice_value_string = x.select([](auto it){
+	zubera::vector<std::string> twice_value_string = x.select([](auto it){
 		return it % 2 == 0;
 	}).map([](auto it){
 		return it + it;
